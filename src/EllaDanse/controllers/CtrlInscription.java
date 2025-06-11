@@ -44,16 +44,20 @@ public class CtrlInscription {
 
     @FXML
     void annuler(ActionEvent event) {
-
+        Main.closeFenInscription();
     }
 
     @FXML
     void reinitialiser(ActionEvent event) {
-
+        Main.FermerFenInscription();
+        Main.openFenInscription();
     }
 
     @FXML
     void validerInscription(ActionEvent event) {
+        if (nomField.getText().isEmpty()){
+
+        }
 
     }
 
