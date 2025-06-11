@@ -50,8 +50,6 @@ public class CtrlAccueil {
     }
 
     @FXML
-    void ouvrirProfil(ActionEvent event) {
-
-    }
+    void ouvrirProfil(ActionEvent event) { Main.openProfil();}
 
 }
