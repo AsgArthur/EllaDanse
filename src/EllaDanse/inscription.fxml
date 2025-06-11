@@ -31,24 +31,28 @@
 
                     <GridPane hgap="10" vgap="10">
                         <columnConstraints>
-                            <ColumnConstraints minWidth="120" prefWidth="120"/>
-                            <ColumnConstraints minWidth="200" prefWidth="250"/>
+                            <ColumnConstraints minWidth="120" prefWidth="120" />
+                            <ColumnConstraints minWidth="200" prefWidth="250" />
                         </columnConstraints>
 
-                        <Label text="Nom *:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                        <TextField fx:id="nomField" promptText="Nom de famille" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="Nom *:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="nomField" promptText="Nom de famille" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                        <Label text="Prénom *:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TextField fx:id="prenomField" promptText="Prénom" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Prénom *:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="prenomField" promptText="Prénom" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                        <Label text="Date de naissance *:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                        <DatePicker fx:id="dateNaissancePicker" promptText="JJ/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="Date de naissance *:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <DatePicker fx:id="dateNaissancePicker" promptText="JJ/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                        <Label text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                        <TextField fx:id="emailField" promptText="nom@exemple.com" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="Email * :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="emailField" promptText="nom@exemple.com" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                        <Label text="Téléphone :" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                        <TextField fx:id="telephoneField" promptText="0123456789" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <Label text="Téléphone * :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <TextField fx:id="telephoneField" promptText="0123456789" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="Membre Bureau *:" GridPane.rowIndex="5" />
+                        <CheckBox fx:id="cbOui" mnemonicParsing="false" onAction="#cbOuiValider" text="Oui" GridPane.rowIndex="6" />
+                        <CheckBox fx:id="cbNon" mnemonicParsing="false" onAction="#cbNonValider" text="Non" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
                     </GridPane>
                 </VBox>
 

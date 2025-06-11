@@ -2,9 +2,15 @@ package EllaDanse.vue;
 
 
 import EllaDanse.controller.Main;
+import EllaDanse.modeles.Cours;
+import EllaDanse.modeles.Donnees;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CtrlInscription {
 
@@ -12,10 +18,16 @@ public class CtrlInscription {
     private Button annulerBtn;
 
     @FXML
-    private ListView<?> coursListView;
+    private ListView<Cours> coursListView;
 
     @FXML
     private DatePicker dateNaissancePicker;
+
+    @FXML
+    private CheckBox cbNon;
+
+    @FXML
+    private CheckBox cbOui;
 
     @FXML
     private TextField emailField;
@@ -30,7 +42,7 @@ public class CtrlInscription {
     private TextField prenomField;
 
     @FXML
-    private ComboBox<?> saisonComboBox;
+    private ComboBox<String> saisonComboBox;
 
     @FXML
     private TextField telephoneField;
@@ -43,9 +55,21 @@ public class CtrlInscription {
                 nomField.textProperty().isEmpty()
                         .or(prenomField.textProperty().isEmpty())
                         .or(telephoneField.textProperty().isEmpty())
+                        .or(emailField.textProperty().isEmpty())
                         .or(dateNaissancePicker.valueProperty().isNull())
                         .or(saisonComboBox.valueProperty().isNull())
+                        .or(cbOui.selectedProperty().not().and(cbNon.selectedProperty().not()))
         );
+        cbOui.disableProperty().bind(cbNon.selectedProperty());
+        cbNon.disableProperty().bind(cbOui.selectedProperty());
+        List<String> saisons = Donnees.getLesSaisons();
+        saisonComboBox.getItems().clear();
+        saisonComboBox.getItems().add("Toutes");
+        saisonComboBox.getItems().addAll(saisons);
+        saisonComboBox.setValue("Toutes");
+
+        coursListView.setItems(Donnees.getLesCours());
+        coursListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
     @FXML
@@ -76,7 +100,16 @@ public class CtrlInscription {
             erreur.showAndWait();
         }
 
-        else {Main.closeInscription();} 
+        else {
+            Main.closeInscription();
+            //Donnees.ajouterMembre(nomField.getText(), prenomField.getText(), dateNaissancePicker.getValue().toString(), emailField.getText(),
+                   // telephoneField.getText(), String saison, String cours, boolean membreBureau;
+        }
     }
 
+    public void cbOuiValider(ActionEvent event) {
+    }
+
+    public void cbNonValider(ActionEvent event) {
+    }
 }
