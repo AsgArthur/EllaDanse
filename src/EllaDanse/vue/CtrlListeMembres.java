@@ -271,6 +271,6 @@ public class CtrlListeMembres {
     }
 
     public void fermerPage(ActionEvent actionEvent) {
-        Main.closeLis
+        Main.closeListeMembres();
     }
 }
