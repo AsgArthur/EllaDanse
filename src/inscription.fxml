@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.InscriptionController">
+
+    <top>
+        <VBox spacing="5">
+            <padding>
+                <Insets top="15" right="15" bottom="10" left="15"/>
+            </padding>
+            <Label text="Inscription d'un membre" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true">
+            <VBox spacing="15">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+
+                <!-- Informations personnelles -->
+                <VBox spacing="10">
+                    <Label text="Informations personnelles" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+
+                    <GridPane hgap="10" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="120"/>
+                            <ColumnConstraints minWidth="200" prefWidth="250"/>
+                        </columnConstraints>
+
+                        <Label text="Nom *:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="nomField" promptText="Nom de famille" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                        <Label text="Prénom *:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="prenomField" promptText="Prénom" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                        <Label text="Date de naissance *:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <DatePicker fx:id="dateNaissancePicker" promptText="JJ/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                        <Label text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <TextField fx:id="emailField" promptText="nom@exemple.com" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                        <Label text="Téléphone :" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <TextField fx:id="telephoneField" promptText="0123456789" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                    </GridPane>
+                </VBox>
+
+                <Separator/>
+
+                <!-- Inscription aux cours -->
+                <VBox spacing="10">
+                    <Label text="Inscription aux cours" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Saison *:"/>
+                        <ComboBox fx:id="saisonComboBox" prefWidth="150"/>
+                    </HBox>
+
+                    <VBox spacing="5">
+                        <Label text="Cours disponibles * (sélection multiple possible):"/>
+                        <ListView fx:id="coursListView" prefHeight="120">
+                            <tooltip>
+                                <Tooltip text="Maintenez Ctrl pour sélectionner plusieurs cours"/>
+                            </tooltip>
+                        </ListView>
+                        <Label text="💡 Les cours en conflit d'horaires ne peuvent pas être sélectionnés ensemble"
+                               style="-fx-font-size: 11px; -fx-text-fill: #666666;"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Message d'information/erreur -->
+                <Label fx:id="messageLabel" wrapText="true" visible="false"
+                       style="-fx-background-color: #f0f0f0; -fx-padding: 8px; -fx-background-radius: 4px;"/>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <VBox spacing="5">
+            <Separator/>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <padding>
+                    <Insets top="10" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <Button fx:id="validerBtn" text="Valider inscription" onAction="#validerInscription"
+                        prefWidth="140" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="Réinitialiser" onAction="#reinitialiser" prefWidth="100"/>
+                <Button fx:id="annulerBtn" text="Annuler" onAction="#annuler" prefWidth="80"/>
+            </HBox>
+        </VBox>
+    </bottom>
+
+</BorderPane>

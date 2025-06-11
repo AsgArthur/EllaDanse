@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProfilController">
+
+    <top>
+        <VBox spacing="5">
+            <padding>
+                <Insets bottom="10" left="15" right="15" top="15" />
+            </padding>
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Profil du membre" />
+            <Separator />
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="20">
+                <padding>
+                    <Insets bottom="10" left="15" right="15" top="10" />
+                </padding>
+
+                <!-- Informations personnelles -->
+                <VBox spacing="10">
+                    <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="📋 Informations personnelles" />
+
+                    <GridPane hgap="15" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="140" prefWidth="140" />
+                            <ColumnConstraints minWidth="200" prefWidth="300" />
+                        </columnConstraints>
+
+                        <Label style="-fx-font-weight: bold;" text="Nom :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <Label fx:id="nomLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                        <Label style="-fx-font-weight: bold;" text="Prénom :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label fx:id="prenomLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <Label style="-fx-font-weight: bold;" text="Âge :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Label fx:id="ageLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <Label style="-fx-font-weight: bold;" text="Date de naissance :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <Label fx:id="dateNaissanceLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                        <Label style="-fx-font-weight: bold;" text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                        <Label style="-fx-font-weight: bold;" text="Téléphone :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                        <Label fx:id="telephoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                        <Label style="-fx-font-weight: bold;" text="Membre depuis :" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                        <Label fx:id="membreDepuisLabel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                  </rowConstraints>
+                    </GridPane>
+                </VBox>
+
+                <Separator />
+
+                <!-- Historique des inscriptions -->
+                <VBox spacing="10">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="📅 Historique des inscriptions" />
+
+                        <!-- Filtres -->
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="Saison :" />
+                        <ComboBox fx:id="filtreSaisonComboBox" prefWidth="120" />
+                        <CheckBox fx:id="afficherInactivesCheckBox" text="Afficher inactives" />
+                    </HBox>
+
+                    <TableView fx:id="inscriptionsTable" prefHeight="200">
+                        <columns>
+                            <TableColumn fx:id="saisonCol" prefWidth="100" text="Saison" />
+                            <TableColumn fx:id="coursCol" prefWidth="120" text="Cours" />
+                            <TableColumn fx:id="horaireCol" prefWidth="140" text="Horaire" />
+                            <TableColumn fx:id="dateInscriptionCol" prefWidth="100" text="Date inscription" />
+                            <TableColumn fx:id="statutCol" prefWidth="80" text="Statut" />
+                        </columns>
+                        <placeholder>
+                            <Label text="Aucune inscription trouvée" />
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <VBox spacing="5">
+            <Separator />
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <padding>
+                    <Insets bottom="15" left="15" right="15" top="10" />
+                </padding>
+
+                <Button fx:id="modifierBtn" onAction="#modifierMembre" prefWidth="130" style="-fx-background-color: #2196f3; -fx-text-fill: white;" text="Modifier membre" />
+                <Button fx:id="ajouterInscriptionBtn" onAction="#ajouterInscription" prefWidth="140" style="-fx-background-color: #4caf50; -fx-text-fill: white;" text="Nouvelle inscription" />
+                <Button fx:id="supprimerInscriptionBtn" onAction="#supprimerInscription" prefWidth="150" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Supprimer inscription" />
+                <Button fx:id="fermerBtn" onAction="#fermer" prefWidth="80" text="Fermer" />
+            </HBox>
+        </VBox>
+    </bottom>
+
+</BorderPane>

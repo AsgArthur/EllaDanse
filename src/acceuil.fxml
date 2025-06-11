@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="controller.MainController">
+
+    <top>
+        <VBox spacing="10" style="-fx-background-color: #2196f3;">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+            <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="🎭 Gestion de l'Association de Danse" />
+        </VBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="25">
+            <padding>
+                <Insets bottom="40" left="30" right="30" top="40" />
+            </padding>
+
+            <Label fx:id="accueilLabel" style="-fx-font-size: 16px; -fx-text-fill: #666666;" text="Bienvenue dans l'application de gestion" />
+
+            <!-- Première ligne de boutons -->
+            <HBox alignment="CENTER" spacing="20">
+                <Button fx:id="inscriptionBtn" onAction="#handleInscription" prefHeight="60" prefWidth="180" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px;" text="️ Nouvelle inscription" />
+
+                <Button fx:id="listeMembresBtn" onAction="#handleAfficherMembres" prefHeight="60" prefWidth="180" style="-fx-background-color: #2196f3; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px;" text="👥 Liste des membres" />
+            </HBox>
+
+            <!-- Deuxième ligne de boutons -->
+            <HBox alignment="CENTER" spacing="20">
+                <Button fx:id="profilBtn" onAction="#handleProfil" prefHeight="60" prefWidth="180" style="-fx-background-color: #9c27b0; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px;" text="👤 Profil membre" />
+
+                <Button fx:id="desinscriptionBtn" onAction="#handleDesinscription" prefHeight="60" prefWidth="180" style="-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px;" text="📤 Désinscription" />
+            </HBox>
+
+            <!-- Troisième ligne de boutons -->
+            <HBox alignment="CENTER" spacing="20" />
+
+        </VBox>
+    </center>
+
+    <bottom>
+        <VBox spacing="5">
+            <Separator />
+            <HBox alignment="CENTER" spacing="10">
+                <padding>
+                    <Insets bottom="15" left="20" right="20" top="10" />
+                </padding>
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <Button fx:id="fermerBtn" onAction="#handleAPropos" prefWidth="100" text="Fermer" />
+            <Button fx:id="aproposBtn" onAction="#handleAPropos" prefWidth="100" text="À propos" />
+            </HBox>
+        </VBox>
+    </bottom>
+
+</BorderPane>

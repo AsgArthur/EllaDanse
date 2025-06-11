@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.ListeMembresController">
+
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="15" right="15" bottom="10" left="15"/>
+            </padding>
+
+            <Label text="Liste des membres" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <!-- Filtres et contrôles -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="Saison :"/>
+                <ComboBox fx:id="saisonComboBox" prefWidth="130"/>
+
+                <Separator orientation="VERTICAL"/>
+
+                <Label text="Tri :"/>
+                <ComboBox fx:id="triComboBox" prefWidth="150"/>
+
+                <Separator orientation="VERTICAL"/>
+
+                <Label text="Recherche :"/>
+                <TextField fx:id="rechercheField" promptText="Nom, prénom, email..." prefWidth="200"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label fx:id="totalMembresLabel" text="Total : 0 membre(s)"
+                       style="-fx-font-weight: bold; -fx-text-fill: #666666;"/>
+            </HBox>
+
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="membresTable" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="idCol" text="N°" prefWidth="50" minWidth="50" maxWidth="60"/>
+                <TableColumn fx:id="nomCol" text="Nom" prefWidth="120" minWidth="100"/>
+                <TableColumn fx:id="prenomCol" text="Prénom" prefWidth="120" minWidth="100"/>
+                <TableColumn fx:id="ageCol" text="Âge" prefWidth="60" minWidth="50" maxWidth="80"/>
+                <TableColumn fx:id="emailCol" text="Email" prefWidth="180" minWidth="150"/>
+                <TableColumn fx:id="saisonCol" text="Saison" prefWidth="100" minWidth="80"/>
+                <TableColumn fx:id="coursCol" text="Cours" prefWidth="200" minWidth="150"/>
+            </columns>
+            <placeholder>
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="👥 Aucun membre trouvé" style="-fx-font-size: 16px; -fx-text-fill: #999999;"/>
+                    <Label text="Utilisez les filtres ou ajoutez de nouveaux membres" style="-fx-font-size: 12px; -fx-text-fill: #999999;"/>
+                </VBox>
+            </placeholder>
+        </TableView>
+    </center>
+
+    <bottom>
+        <VBox spacing="5">
+            <Separator/>
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <padding>
+                    <Insets top="10" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <Label text="💡 Double-cliquez sur un membre pour voir son profil"
+                       style="-fx-font-size: 11px; -fx-text-fill: #666666;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="profilBtn" text="Voir profil" onAction="#ouvrirProfilMembre"
+                        prefWidth="100" style="-fx-background-color: #9c27b0; -fx-text-fill: white;"/>
+                <Button fx:id="modifierBtn" text="Modifier" onAction="#modifierMembre"
+                        prefWidth="80" style="-fx-background-color: #2196f3; -fx-text-fill: white;"/>
+                <Button fx:id="supprimerBtn" text="Supprimer" onAction="#supprimerMembre"
+                        prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+    </bottom>
+
+</BorderPane>
