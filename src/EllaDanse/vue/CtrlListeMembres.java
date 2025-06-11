@@ -2,6 +2,7 @@ package EllaDanse.vue;
 
 import EllaDanse.controller.Main;
 import EllaDanse.modeles.Donnees;
+import EllaDanse.modeles.GestionnaireInscription;
 import EllaDanse.modeles.Inscription;
 import EllaDanse.modeles.Membre;
 import javafx.beans.binding.Bindings;
@@ -38,7 +39,6 @@ public class CtrlListeMembres {
     @FXML private TableColumn<Membre, String> saisonCol;
     @FXML private TableColumn<Membre, String> dateNaissanceCol;
     @FXML private TableColumn<Membre, String> telephoneCol;
-    @FXML private TableColumn<Membre, String> coursCol;
 
 
     @FXML private Label titreLabel;
@@ -51,9 +51,9 @@ public class CtrlListeMembres {
     @FXML private ComboBox<String> saisonComboBox;
     @FXML private ComboBox<String> triComboBox;
 
-    private ObservableList<Membre> tousLesMembres;
-    private FilteredList<Membre> membresFiltres;
-    private SortedList<Membre> membresTries;
+    private ObservableList<Inscription> tousLesMembres;
+    private FilteredList<Inscription> membresFiltres;
+    private SortedList<Inscription> membresTries;
 
 
     @FXML
@@ -99,17 +99,17 @@ public class CtrlListeMembres {
         if (bureauToggle.isSelected()) {
             titreLabel.setText("Liste des membres du bureau (" + Donnees.getNombreMembresBureau() + ")");
             bureauToggle.setText("Voir membres normaux");
-            membresFiltres.setPredicate(membre -> {
-                if (!membre.isMembreBureau()) return false;
-                return appliquerAutresFiltres(membre);
+            membresFiltres.setPredicate(inscription -> {
+                if (!inscription.getMembre().isMembreBureau()) return false;
+                return appliquerAutresFiltres(inscription.getMembre());
             });
         } else {
             int nombresNormaux = Donnees.getNombreTotalMembres() - Donnees.getNombreMembresBureau();
             titreLabel.setText("Liste des membres normaux (" + nombresNormaux + ")");
             bureauToggle.setText("Voir membres bureau");
-            membresFiltres.setPredicate(membre -> {
-                if (membre.isMembreBureau()) return false;
-                return appliquerAutresFiltres(membre);
+            membresFiltres.setPredicate(inscription -> {
+                if (inscription.getMembre().isMembreBureau()) return false;
+                return appliquerAutresFiltres(inscription.getMembre());
             });
         }
         mettreAJourCompteur();
@@ -130,38 +130,38 @@ public class CtrlListeMembres {
         String tri = triComboBox.getValue();
         if (tri == null) return;
 
-        Comparator<Membre> comparator;
+        Comparator<Inscription> comparator;
 
         switch (tri) {
             case "Ordre alphabétique et saison":
-                comparator = Comparator.comparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Membre::getSaison);
+                comparator = Comparator.comparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Inscription::getSaison);
                 break;
 
             case "Saison et ordre alphabétique":
-                comparator = Comparator.comparing(Membre::getSaison)
-                        .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER);
+                comparator = Comparator.comparing(Inscription::getSaison)
+                        .thenComparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER);
                 break;
 
             case "Saison, cours et ordre alphabétique":
-                comparator = Comparator.comparing(Membre::getSaison)
-                        .thenComparing(Membre::getCours)
-                        .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER);
+                comparator = Comparator.comparing(Inscription::getPrenom)
+                        .thenComparing(Inscription::getCours)
+                        .thenComparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER);
                 break;
 
             case "Saison, ordre alphabétique et cour":
-                comparator = Comparator.comparing(Membre::getSaison)
-                        .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Membre::getCours);
+                comparator = Comparator.comparing(Inscription::getSaison)
+                        .thenComparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Inscription::getCours);
                 break;
 
             default:
-                comparator = Comparator.comparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER);
+                comparator = Comparator.comparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER);
                 break;
         }
 
@@ -188,7 +188,6 @@ public class CtrlListeMembres {
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
         dateNaissanceCol.setCellValueFactory(new PropertyValueFactory<>("dateNaissance"));
         telephoneCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
-        coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
 
         // Style conditionnel sur les lignes
         membresTable.setRowFactory(tv -> {
@@ -211,9 +210,11 @@ public class CtrlListeMembres {
 
             return row;
         });
-
         // Données de base
-        tousLesMembres = Donnees.getLesMembres();
+        GestionnaireInscription toutesInscriptions = Donnees.getLesInscriptions();
+        List<Inscription> liste = toutesInscriptions.getInscriptions();           // ← extrait la liste
+        List<Inscription> listeCoursMembre = new ArrayList<>();
+        tousLesMembres = toutesInscriptions;
         membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
         membresTries = new SortedList<>(membresFiltres);
 
