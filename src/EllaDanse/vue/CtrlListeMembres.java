@@ -1,7 +1,7 @@
-package EllaDanse.controllers;
+package EllaDanse.vue;
 
 import EllaDanse.modeles.Membre;
-import EllaDanse.models.Membre;
+import EllaDanse.modeles.Membre;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -253,7 +253,7 @@ public class CtrlListeMembres {
         }
 
         String rechercheLower = recherche.toLowerCase();
-        return Membre.getNom().toLowerCase().contains(rechercheLower)
+        return membre.getNom().toLowerCase().contains(rechercheLower)
                 || membre.getPrenom().toLowerCase().contains(rechercheLower)
                 || membre.getEmail().toLowerCase().contains(rechercheLower);
     }
