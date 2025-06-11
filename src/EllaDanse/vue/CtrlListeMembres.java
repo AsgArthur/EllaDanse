@@ -46,40 +46,10 @@ public class CtrlListeMembres {
     private FilteredList<Membre> membresFiltres;
     private SortedList<Membre> membresTries;
 
-    @FXML
-    public void modifierMembre() {
-        Membre membreSelectionne = membresTable.getSelectionModel().getSelectedItem();
-        if (membreSelectionne != null) {
-            try {
-                // Ouvrir la fenêtre de modification
-                ouvrirFenetreProfil(membreSelectionne);
-
-                // Rafraîchir la table après modification
-                membresTable.refresh();
-                appliquerFiltres();
-
-            } catch (IOException e) {
-                afficherErreur("Erreur", "Impossible d'ouvrir la fenêtre de modification : " + e.getMessage());
-            }
-        }
-    }
 
     @FXML
-    public void ouvrirProfilMembre() {
-        Membre membreSelectionne = membresTable.getSelectionModel().getSelectedItem();
-        if (membreSelectionne != null) {
-            try {
-                // Ouvrir la fenêtre de profil
-                ouvrirFenetreProfil(membreSelectionne);
-
-                // Rafraîchir la table au retour
-                membresTable.refresh();
-                appliquerFiltres();
-
-            } catch (IOException e) {
-                afficherErreur("Erreur", "Impossible d'ouvrir la fenêtre de profil : " + e.getMessage());
-            }
-        }
+    void ouvrirProfilMembre() {
+        Main.openProfil(membresTable.getSelectionModel().getSelectedItem());
     }
 
     @FXML
@@ -257,7 +227,7 @@ public class CtrlListeMembres {
     // ===== NOUVELLES MÉTHODES POUR OUVRIR LES FENÊTRES =====
 
     private void ouvrirFenetreProfil(Membre membre) throws IOException {
-        Main.openProfil();
+        Main.openProfil(membre);
     }
 
     private void appliquerFiltres() {

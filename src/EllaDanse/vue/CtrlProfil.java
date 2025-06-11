@@ -1,5 +1,6 @@
 package EllaDanse.vue;
 
+import EllaDanse.modeles.Membre;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,6 +9,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
+import java.time.LocalDate;
+
+import static java.lang.Integer.parseInt;
 
 public class CtrlProfil {
 
@@ -88,5 +93,12 @@ public class CtrlProfil {
 
     }
 
+    public void afficherMembre(Membre m) {
+        nomLabel.setText(""+m.getNom());
+        prenomLabel.setText(m.getPrenom());
+        ageLabel.setText(Integer.toString(m.getAge()));
+        emailLabel.setText(m.getEmail());
+        telephoneLabel.setText(m.getTelephone());
+    }
 }
 

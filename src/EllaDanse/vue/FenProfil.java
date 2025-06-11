@@ -1,5 +1,6 @@
 package EllaDanse.vue;
 
+import EllaDanse.modeles.Membre;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -26,5 +27,9 @@ public class FenProfil extends Stage {
         Pane racine = loader.load();
         ctrl = loader.getController();
         return racine;
+    }
+
+    public void afficherMembre(Membre e) {
+        ctrl.afficherMembre(e);
     }
 }

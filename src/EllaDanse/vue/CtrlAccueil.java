@@ -24,16 +24,12 @@ public class CtrlAccueil {
     private Button listeMembresBtn;
 
     @FXML
-    private Button profilBtn;
-
-    @FXML
     void fermerAccueil(ActionEvent event) {
         Main.fermerAppli();
     }
 
     @FXML
     void handleAPropos(ActionEvent event) {
-
     }
 
     @FXML
@@ -45,8 +41,5 @@ public class CtrlAccueil {
     void ouvrirInscription(ActionEvent event) {
         Main.openInscription();
     }
-
-    @FXML
-    void ouvrirProfil(ActionEvent event) { Main.openProfil();}
 
 }

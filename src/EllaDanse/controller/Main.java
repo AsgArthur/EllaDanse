@@ -1,5 +1,6 @@
 package EllaDanse.controller;
 
+import EllaDanse.modeles.Membre;
 import EllaDanse.vue.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -39,7 +40,8 @@ public class Main extends Application{
         fAccueil.show();
     }
 
-    static public void openProfil(){
+    static public void openProfil(Membre m){
+        fProfil.afficherMembre(m);
         fProfil.show();
         fAccueil.close();
     }
