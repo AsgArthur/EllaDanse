@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="EllaDanse.controllers.CtrlListeMembres">
+            fx:controller="EllaDanse.vue.CtrlListeMembres">
 
     <top>
         <VBox spacing="10">

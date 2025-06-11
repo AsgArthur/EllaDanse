@@ -1,6 +1,6 @@
 package EllaDanse;
 
-import EllaDanse.controllers.FenAccueil;
+import EllaDanse.vue.FenAccueil;
 import EllaDanse.controllers.FenInscription;
 import EllaDanse.controllers.FenListeMembres;
 import javafx.application.Application;
