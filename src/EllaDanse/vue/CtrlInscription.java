@@ -1,6 +1,7 @@
 package EllaDanse.vue;
 
 
+import EllaDanse.controller.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -44,13 +45,13 @@ public class CtrlInscription {
 
     @FXML
     void annuler(ActionEvent event) {
-        Main.closeFenInscription();
+        Main.closeInscription();
     }
 
     @FXML
     void reinitialiser(ActionEvent event) {
-        Main.FermerFenInscription();
-        Main.openFenInscription();
+        Main.closeInscription();
+        Main.openInscription();
     }
 
     @FXML
