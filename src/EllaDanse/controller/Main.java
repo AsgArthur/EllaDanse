@@ -9,14 +9,12 @@ public class Main extends Application{
     static private FenAccueil fAccueil;
     static private FenInscription fInscription;
     static private FenListeMembres fListeMembres;
-    static private FenDesinscription fDesinscription;
     static private FenProfil fProfil;
 
     public void start(Stage f) throws Exception {
         fAccueil = new FenAccueil();
         fInscription = new FenInscription();
         fListeMembres = new FenListeMembres();
-        fDesinscription = new FenDesinscription();
         fProfil = new FenProfil();
         fAccueil.show();
     }
@@ -41,19 +39,14 @@ public class Main extends Application{
         fAccueil.show();
     }
 
-    static public void openDesinscription(){
-        fAccueil.close();
-        fDesinscription.show();
-    }
-
-    static public void closeDesinscription(){
-        fDesinscription.close();
-        fAccueil.show();
-    }
-
-    static public void  openProfil(){
+    static public void openProfil(){
         fProfil.show();
         fAccueil.close();
+    }
+
+    static public void closeProfil(){
+        fProfil.close();
+        fAccueil.show();
     }
 
     static public void fermerAppli() {

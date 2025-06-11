@@ -45,11 +45,6 @@ public class CtrlAccueil {
     }
 
     @FXML
-    void ouvrirDesinscription(ActionEvent event) {
-        Main.openDesinscription();
-    }
-
-    @FXML
     void ouvrirInscription(ActionEvent event) {
         Main.openInscription();
     }
