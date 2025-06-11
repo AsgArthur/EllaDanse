@@ -31,5 +31,6 @@ public class FenProfil extends Stage {
 
     public void afficherMembre(Membre e) {
         ctrl.afficherMembre(e);
+        ctrl.afficherLesInscriptions();
     }
 }
