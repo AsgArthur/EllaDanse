@@ -1,4 +1,4 @@
-package EllaDanse.controllers;
+package EllaDanse.vue;
 
 import EllaDanse.Main;
 import javafx.event.ActionEvent;
