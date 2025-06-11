@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.ListeMembresController">
+            fx:controller="EllaDanse.controllers.ListeMembresController">
 
     <top>
         <VBox spacing="10">
