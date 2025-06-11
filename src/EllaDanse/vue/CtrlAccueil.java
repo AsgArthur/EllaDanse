@@ -40,13 +40,13 @@ public class CtrlAccueil {
     }
 
     @FXML
-    void ouvrirListe  Membres(ActionEvent event) {
+    void ouvrirListeMembres(ActionEvent event) {
         Main.openInscription();
     }
 
     @FXML
     void ouvrirDesinscription(ActionEvent event) {
-
+        Main.openDesinscription();
     }
 
     @FXML

@@ -18,6 +18,7 @@ public class Main extends Application{
         fAccueil = new FenAccueil();
         fInscription = new FenInscription();
         fListeMembres = new FenListeMembres();
+        fDesinscription = new FenDesinscription();
         fAccueil.show();
     }
 
