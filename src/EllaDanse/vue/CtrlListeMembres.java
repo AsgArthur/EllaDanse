@@ -15,6 +15,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -192,10 +194,11 @@ public class CtrlListeMembres {
                 }
             });
 
-            row.setOnMouseClicked(event -> {
-                if (!row.isEmpty() && event.getClickCount() == 2 && event.isPrimaryButtonDown()) {
-                    Membre membre = row.getItem();
-                    Main.openProfil(membre);
+            membresTable.setOnMouseClicked((MouseEvent e) -> {
+                if (( e.getClickCount()==2)
+                        && (e.getButton()== MouseButton.PRIMARY)
+                        && (e.getTarget() instanceof Text)) {
+                    Main.openProfil(membresTable.getSelectionModel().getSelectedItem());
                 }
             });
 
@@ -206,8 +209,6 @@ public class CtrlListeMembres {
         membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
         membresTries = new SortedList<>(membresFiltres);
 
-        // ❌ On retire le binding pour pouvoir trier manuellement
-        // membresTries.comparatorProperty().bind(membresTable.comparatorProperty());
 
         membresTable.setItems(membresTries);
 
