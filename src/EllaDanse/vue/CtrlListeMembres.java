@@ -127,31 +127,42 @@ public class CtrlListeMembres {
         Comparator<Membre> comparator = null;
 
         switch (tri) {
-            case "Alphabétique":
+            case "Ordre alphabétique et saison":
                 comparator = Comparator.comparing(Membre::getNom)
-                        .thenComparing(Membre::getPrenom);
+                        .thenComparing(Membre::getPrenom)
+                        .thenComparing(Membre::getSaison);
                 break;
-            case "Saison et alphabétique":
+
+            case "Saison et ordre alphabétique":
                 comparator = Comparator.comparing(Membre::getSaison)
                         .thenComparing(Membre::getNom)
                         .thenComparing(Membre::getPrenom);
                 break;
-            case "Saison, cours et alphabétique":
+
+            case "Saison, cours et ordre alphabétique":
                 comparator = Comparator.comparing(Membre::getSaison)
                         .thenComparing(Membre::getCours)
                         .thenComparing(Membre::getNom)
                         .thenComparing(Membre::getPrenom);
                 break;
-            case "Saison, alphabétique et cours":
+
+            case "Saison, ordre alphabétique et cour":
                 comparator = Comparator.comparing(Membre::getSaison)
                         .thenComparing(Membre::getNom)
                         .thenComparing(Membre::getPrenom)
                         .thenComparing(Membre::getCours);
                 break;
+
+            default:
+                comparator = Comparator.comparing(Membre::getNom)
+                        .thenComparing(Membre::getPrenom);
+                break;
         }
 
         membresTries.setComparator(comparator);
+        membresTable.setItems(membresTries); // pour forcer la mise à jour
     }
+
 
     @FXML
     public void gererDoubleClic() {
@@ -170,62 +181,66 @@ public class CtrlListeMembres {
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
         coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
 
-        // Style pour différencier les membres du bureau
+        // Configuration des lignes + style + double-clic
         membresTable.setRowFactory(tv -> {
             TableRow<Membre> row = new TableRow<>();
-            row.itemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null && newValue.isMembreBureau()) {
+            row.itemProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null && newVal.isMembreBureau()) {
                     row.setStyle("-fx-background-color: #e3f2fd; -fx-font-weight: bold;");
                 } else {
                     row.setStyle("");
                 }
             });
+
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getClickCount() == 2 && event.isPrimaryButtonDown()) {
+                    Membre membre = row.getItem();
+                    Main.openProfil(membre);
+                }
+            });
+
             return row;
         });
 
-
         tousLesMembres = Donnees.getLesMembres();
-
-        // Configurer les listes filtrées et triées
         membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
         membresTries = new SortedList<>(membresFiltres);
-        membresTries.comparatorProperty().bind(membresTable.comparatorProperty());
+
+        // ❌ On retire le binding pour pouvoir trier manuellement
+        // membresTries.comparatorProperty().bind(membresTable.comparatorProperty());
+
         membresTable.setItems(membresTries);
 
-        // Remplir les ComboBox
         configurerComboBoxes();
-
-        // Désactiver les boutons si aucune sélection
         profilBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
         supprimerBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
 
-        // Configuration initiale
         titreLabel.setText("Liste de tous les membres (" + Donnees.getNombreTotalMembres() + ")");
         bureauToggle.setText("Voir membres bureau");
 
-        // Appliquer les filtres initiaux
         appliquerFiltres();
-
     }
 
     private void configurerComboBoxes() {
-        // Options de tri
-        triComboBox.getItems().clear();
-        triComboBox.getItems().addAll(
-                "Alphabétique",
-                "Saison et alphabétique",
-                "Saison, cours et alphabétique",
-                "Saison, alphabétique et cours"
+        // Options de tri disponibles
+        triComboBox.getItems().setAll(
+                "Ordre alphabétique et saison",
+                "Saison et ordre alphabétique",
+                "Saison, cours et ordre alphabétique",
+                "Saison, ordre alphabétique et cour"
         );
-        triComboBox.setValue("Alphabétique");
+        triComboBox.setValue("Ordre alphabétique et saison");
 
-        // Saisons disponibles
-        List<String> saisons = Donnees.getLesSaisons();
+        // Remplissage des saisons disponibles
         saisonComboBox.getItems().clear();
         saisonComboBox.getItems().add("Toutes");
+
+        List<String> saisons = Donnees.getLesSaisons();
         saisonComboBox.getItems().addAll(saisons);
         saisonComboBox.setValue("Toutes");
     }
+
+
 
     // ===== NOUVELLES MÉTHODES POUR OUVRIR LES FENÊTRES =====
 
@@ -314,6 +329,28 @@ public class CtrlListeMembres {
         // Mettre à jour le titre
         titreLabel.setText("Liste de tous les membres (" + Donnees.getNombreTotalMembres() + ")");
     }
+
+    @FXML
+    private TableView<Membre> tableMembres;
+
+    @FXML
+    private void gererClicSurTable(MouseEvent event) {
+        Membre membre = tableMembres.getSelectionModel().getSelectedItem();
+
+        if (membre == null) return;
+
+        if (event.getClickCount() == 2 && event.isPrimaryButtonDown()) {
+            // Double-clic gauche → ouvrir le profil
+            Main.openProfil(membre);
+        } else if (event.getClickCount() == 1 && event.isPrimaryButtonDown()) {
+            // Simple clic gauche → action par défaut (sélection, affichage, etc.)
+            selectionnerMembre(membre);
+        }
+    }
+
+    private void selectionnerMembre(Membre membre) {
+    }
+
 
     public void fermerPage(ActionEvent actionEvent) {
         Main.closeListeMembre();

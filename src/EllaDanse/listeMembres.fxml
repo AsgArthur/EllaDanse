@@ -54,12 +54,13 @@
     <center>
         <TableView fx:id="membresTable" onMouseClicked="#gererDoubleClic" prefHeight="400" prefWidth="903.0">
             <columns>
-                <TableColumn fx:id="idCol" maxWidth="62.0" minWidth="50" prefWidth="62.0" text="N°" />
-                <TableColumn fx:id="nomCol" minWidth="100" prefWidth="137.33334350585938" text="Nom" />
-                <TableColumn fx:id="prenomCol" minWidth="100" prefWidth="172.00006103515625" text="Prénom" />
-                <TableColumn fx:id="ageCol" maxWidth="342.0" minWidth="50" prefWidth="116.00006103515625" text="Âge" />
-                <TableColumn fx:id="emailCol" minWidth="150" prefWidth="308.0" text="Email" />
-                <TableColumn fx:id="saisonCol" minWidth="80" prefWidth="138.0" text="Saison" />
+                <TableColumn fx:id="idCol" text="ID" />
+                <TableColumn fx:id="nomCol" text="Nom" />
+                <TableColumn fx:id="prenomCol" text="Prénom" />
+                <TableColumn fx:id="ageCol" text="Âge" />
+                <TableColumn fx:id="emailCol" text="Email" />
+                <TableColumn fx:id="saisonCol" text="Saison" />
+                <TableColumn fx:id="coursCol" text="Cours" />
             </columns>
             <placeholder>
                 <VBox alignment="CENTER" spacing="10">
