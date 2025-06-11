@@ -38,6 +38,7 @@ public class CtrlListeMembres {
     @FXML private TableColumn<Membre, String> saisonCol;
     @FXML private TableColumn<Membre, String> dateNaissanceCol;
     @FXML private TableColumn<Membre, String> telephoneCol;
+    @FXML private TableColumn<Membre, String> coursCol;
 
 
     @FXML private Label titreLabel;
@@ -146,7 +147,7 @@ public class CtrlListeMembres {
 
             case "Saison, cours et ordre alphabétique":
                 comparator = Comparator.comparing(Membre::getSaison)
-                        .thenComparing(Inscription::getCours)
+                        .thenComparing(Membre::getCours)
                         .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER);
                 break;
@@ -187,6 +188,7 @@ public class CtrlListeMembres {
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
         dateNaissanceCol.setCellValueFactory(new PropertyValueFactory<>("dateNaissance"));
         telephoneCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
 
         // Style conditionnel sur les lignes
         membresTable.setRowFactory(tv -> {
