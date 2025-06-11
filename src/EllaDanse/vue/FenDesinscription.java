@@ -1,26 +1,33 @@
-package EllaDanse.controllers;
+package EllaDanse.vue;
+
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+
 import java.io.File;
 import java.io.IOException;
 
-public class FenListeMembres extends Stage {
 
-    private CtrlListeMembres ctrl;
+public class FenDesinscription extends Stage {
 
-    public FenListeMembres() throws IOException {
-        this.setTitle("Liste des membre EllaDanse");
+
+    private CtrlDesinscription ctrl;
+
+
+    public FenDesinscription() throws IOException {
+        this.setTitle("Détail d'un employé");
         this.setResizable(false);
         Scene laScene = new Scene(creerSceneGraph());
         this.setScene(laScene);
     }
 
+
     private Pane creerSceneGraph() throws IOException {
-        File f = new File("src/EllaDanse/listeMembres.fxml");
+        // Dans l'instruction suivante, indiquer le chemin complet du fichier fxml
+        File f = new File("../EllaDanse/desinscription.fxml");
         FXMLLoader loader;
         loader = new FXMLLoader(f.toURI().toURL());
         Pane racine = loader.load();
@@ -28,3 +35,4 @@ public class FenListeMembres extends Stage {
         return racine;
     }
 }
+

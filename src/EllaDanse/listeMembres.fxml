@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="EllaDanse.controllers.CtrlListeMembres">
+            fx:controller="EllaDanse.vue.CtrlListeMembres">
 
     <top>
         <VBox spacing="10">
@@ -14,22 +14,27 @@
                 <Insets top="15" right="15" bottom="10" left="15"/>
             </padding>
 
-            <Label text="Liste des membres" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label fx:id="titreLabel" text="Liste des membres" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <ToggleButton fx:id="bureauToggle" text="Membres du bureau"
+                              style="-fx-background-color: #673ab7; -fx-text-fill: white;"
+                              onAction="#toggleBureau"/>
+            </HBox>
 
             <!-- Filtres et contrôles -->
             <HBox spacing="15" alignment="CENTER_LEFT">
                 <Label text="Saison :"/>
-                <ComboBox fx:id="saisonComboBox" prefWidth="130"/>
+                <ComboBox fx:id="saisonComboBox" prefWidth="130" onAction="#filtrerParSaison"/>
 
                 <Separator orientation="VERTICAL"/>
 
                 <Label text="Tri :"/>
-                <ComboBox fx:id="triComboBox" prefWidth="150"/>
+                <ComboBox fx:id="triComboBox" prefWidth="200" onAction="#changerTri"/>
 
                 <Separator orientation="VERTICAL"/>
 
                 <Label text="Recherche :"/>
-                <TextField fx:id="rechercheField" promptText="Nom, prénom, email..." prefWidth="200"/>
+                <TextField fx:id="rechercheField" promptText="Nom, prénom, email..." prefWidth="200" onKeyReleased="#filtrerParRecherche"/>
 
                 <Region HBox.hgrow="ALWAYS"/>
 
@@ -42,7 +47,7 @@
     </top>
 
     <center>
-        <TableView fx:id="membresTable" prefHeight="400">
+        <TableView fx:id="membresTable" prefHeight="400" onMouseClicked="#gererDoubleClic">
             <columns>
                 <TableColumn fx:id="idCol" text="N°" prefWidth="50" minWidth="50" maxWidth="60"/>
                 <TableColumn fx:id="nomCol" text="Nom" prefWidth="120" minWidth="100"/>
@@ -75,11 +80,11 @@
                 <Region HBox.hgrow="ALWAYS"/>
 
                 <Button fx:id="profilBtn" text="Voir profil" onAction="#ouvrirProfilMembre"
-                        prefWidth="100" style="-fx-background-color: #9c27b0; -fx-text-fill: white;"/>
+                        prefWidth="100" style="-fx-background-color: #9c27b0; -fx-text-fill: white;" disable="true"/>
                 <Button fx:id="modifierBtn" text="Modifier" onAction="#modifierMembre"
-                        prefWidth="80" style="-fx-background-color: #2196f3; -fx-text-fill: white;"/>
+                        prefWidth="80" style="-fx-background-color: #2196f3; -fx-text-fill: white;" disable="true"/>
                 <Button fx:id="supprimerBtn" text="Supprimer" onAction="#supprimerMembre"
-                        prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                        prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" disable="true"/>
             </HBox>
         </VBox>
     </bottom>

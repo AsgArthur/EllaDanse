@@ -1,5 +1,6 @@
-package EllaDanse.controllers;
+package EllaDanse.vue;
 
+import EllaDanse.controller.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -29,29 +30,33 @@ public class CtrlAccueil {
     private Button profilBtn;
 
     @FXML
+    void fermerAccueil(ActionEvent event) {
+        Main.fermerAppli();
+    }
+
+    @FXML
     void handleAPropos(ActionEvent event) {
 
     }
 
     @FXML
-    void handleAfficherMembres(ActionEvent event) {
+    void ouvrirListe  Membres(ActionEvent event) {
+        Main.openInscription();
+    }
+
+    @FXML
+    void ouvrirDesinscription(ActionEvent event) {
 
     }
 
     @FXML
-    void handleDesinscription(ActionEvent event) {
-
+    void ouvrirInscription(ActionEvent event) {
+        Main.openInscription();
     }
 
     @FXML
-    void handleInscription(ActionEvent event) {
-
-    }
-
-    @FXML
-    void handleProfil(ActionEvent event) {
+    void ouvrirProfil(ActionEvent event) {
 
     }
 
 }
-
