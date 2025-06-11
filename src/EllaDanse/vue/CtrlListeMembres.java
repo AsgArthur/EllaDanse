@@ -195,13 +195,11 @@ public class CtrlListeMembres {
                 }
             });
 
-            // Double clic pour ouvrir le profil
-            row.setOnMouseClicked(e -> {
-                if (e.getClickCount() == 2 && e.getButton() == MouseButton.PRIMARY) {
-                    Membre membre = row.getItem();
-                    if (membre != null) {
-                        Main.openProfil(membre);
-                    }
+            membresTable.setOnMouseClicked((MouseEvent e) -> {
+                if (( e.getClickCount()==2)
+                        && (e.getButton()==MouseButton.PRIMARY)
+                        && (e.getTarget() instanceof Text)) {
+                    Main.openProfil(membresTable.getSelectionModel().getSelectedItem());
                 }
             });
 
