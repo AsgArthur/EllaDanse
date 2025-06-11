@@ -27,7 +27,6 @@ public class CtrlListeMembres {
     @FXML private Label titreLabel;
     @FXML private Label totalMembresLabel;
     @FXML private ToggleButton bureauToggle;
-    @FXML private Button modifierBtn;
     @FXML private Button profilBtn;
     @FXML private Button supprimerBtn;
     @FXML private TextField rechercheField;
@@ -202,7 +201,6 @@ public class CtrlListeMembres {
 
         // Désactiver les boutons si aucune sélection
         profilBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
-        modifierBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
         supprimerBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
 
         // Appliquer les filtres initiaux
