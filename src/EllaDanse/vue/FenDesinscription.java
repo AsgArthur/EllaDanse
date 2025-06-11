@@ -27,7 +27,7 @@ public class FenDesinscription extends Stage {
 
     private Pane creerSceneGraph() throws IOException {
         // Dans l'instruction suivante, indiquer le chemin complet du fichier fxml
-        File f = new File("../EllaDanse/desinscription.fxml");
+        File f = new File("src/EllaDanse/desinscription.fxml");
         FXMLLoader loader;
         loader = new FXMLLoader(f.toURI().toURL());
         Pane racine = loader.load();
