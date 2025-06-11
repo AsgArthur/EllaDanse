@@ -1,33 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="EllaDanse.vue.CtrlInscription">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EllaDanse.vue.CtrlInscription">
 
     <top>
-        <VBox spacing="5">
+        <VBox prefHeight="62.0" prefWidth="502.0" spacing="5">
             <padding>
-                <Insets top="15" right="15" bottom="10" left="15"/>
+                <Insets bottom="10" left="15" right="15" top="15" />
             </padding>
-            <Label text="Inscription d'un membre" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Separator/>
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Inscription d'un membre" />
+            <Separator />
         </VBox>
     </top>
 
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="true">
+        <ScrollPane fitToHeight="true" fitToWidth="true">
             <VBox spacing="15">
                 <padding>
-                    <Insets top="10" right="15" bottom="10" left="15"/>
+                    <Insets bottom="10" left="15" right="15" top="10" />
                 </padding>
 
                 <!-- Informations personnelles -->
                 <VBox spacing="10">
-                    <Label text="Informations personnelles" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Informations personnelles" />
 
                     <GridPane hgap="10" vgap="10">
                         <columnConstraints>
@@ -41,47 +53,57 @@
                         <Label text="Prénom *:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                         <TextField fx:id="prenomField" promptText="Prénom" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                        <Label text="Date de naissance *:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <DatePicker fx:id="dateNaissancePicker" promptText="JJ/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Date de naissance *:" GridPane.rowIndex="3" />
+                        <DatePicker fx:id="dateNaissancePicker" promptText="JJ/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                        <Label text="Email * :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <TextField fx:id="emailField" promptText="nom@exemple.com" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Email * :" GridPane.rowIndex="4" />
+                        <TextField fx:id="emailField" promptText="nom@exemple.com" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-                        <Label text="Téléphone * :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                        <TextField fx:id="telephoneField" promptText="0123456789" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label text="Membre Bureau *:" GridPane.rowIndex="5" />
-                        <CheckBox fx:id="cbOui" mnemonicParsing="false" onAction="#cbOuiValider" text="Oui" GridPane.rowIndex="6" />
-                        <CheckBox fx:id="cbNon" mnemonicParsing="false" onAction="#cbNonValider" text="Non" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label text="Téléphone * :" GridPane.rowIndex="5" />
+                        <TextField fx:id="telephoneField" promptText="0123456789" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label text="Membre Bureau *:" GridPane.rowIndex="6" />
+                        <CheckBox fx:id="cbOui" mnemonicParsing="false" onAction="#cbOuiValider" text="Oui" GridPane.rowIndex="7" />
+                        <CheckBox fx:id="cbNon" mnemonicParsing="false" onAction="#cbNonValider" text="Non" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <Label text="Age *:" GridPane.rowIndex="2" />
+                        <TextField fx:id="ageField" promptText="18" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                            <RowConstraints />
+                        </rowConstraints>
 
                     </GridPane>
                 </VBox>
 
-                <Separator/>
+                <Separator />
 
                 <!-- Inscription aux cours -->
                 <VBox spacing="10">
-                    <Label text="Inscription aux cours" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Inscription aux cours" />
 
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Saison *:"/>
-                        <ComboBox fx:id="saisonComboBox" prefWidth="150"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Saison *:" />
+                        <ComboBox fx:id="saisonComboBox" prefWidth="150" />
                     </HBox>
 
                     <VBox spacing="5">
-                        <Label text="Cours disponibles * (sélection multiple possible):"/>
+                        <Label text="Cours disponibles * (sélection multiple possible):" />
                         <ListView fx:id="coursListView" prefHeight="120">
                             <tooltip>
-                                <Tooltip text="Maintenez Ctrl pour sélectionner plusieurs cours"/>
+                                <Tooltip text="Maintenez Ctrl pour sélectionner plusieurs cours" />
                             </tooltip>
                         </ListView>
-                        <Label text="💡 Les cours en conflit d'horaires ne peuvent pas être sélectionnés ensemble"
-                               style="-fx-font-size: 11px; -fx-text-fill: #666666;"/>
+                        <Label style="-fx-font-size: 11px; -fx-text-fill: #666666;" text="💡 Les cours en conflit d'horaires ne peuvent pas être sélectionnés ensemble" />
                     </VBox>
                 </VBox>
 
                 <!-- Message d'information/erreur -->
-                <Label fx:id="messageLabel" wrapText="true" visible="false"
-                       style="-fx-background-color: #f0f0f0; -fx-padding: 8px; -fx-background-radius: 4px;"/>
+                <Label fx:id="messageLabel" style="-fx-background-color: #f0f0f0; -fx-padding: 8px; -fx-background-radius: 4px;" visible="false" wrapText="true" />
 
             </VBox>
         </ScrollPane>
@@ -89,16 +111,15 @@
 
     <bottom>
         <VBox spacing="5">
-            <Separator/>
-            <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Separator />
+            <HBox alignment="CENTER_RIGHT" spacing="10">
                 <padding>
-                    <Insets top="10" right="15" bottom="15" left="15"/>
+                    <Insets bottom="15" left="15" right="15" top="10" />
                 </padding>
 
-                <Button fx:id="validerBtn" text="Valider inscription" onAction="#validerInscription"
-                        prefWidth="140" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-                <Button text="Réinitialiser" onAction="#reinitialiser" prefWidth="100"/>
-                <Button fx:id="annulerBtn" text="Annuler" onAction="#annuler" prefWidth="80"/>
+                <Button fx:id="validerBtn" onAction="#validerInscription" prefWidth="140" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Valider inscription" />
+                <Button onAction="#reinitialiser" prefWidth="100" text="Réinitialiser" />
+                <Button fx:id="annulerBtn" onAction="#annuler" prefWidth="80" text="Annuler" />
             </HBox>
         </VBox>
     </bottom>
