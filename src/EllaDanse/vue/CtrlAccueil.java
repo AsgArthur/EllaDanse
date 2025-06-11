@@ -15,9 +15,6 @@ public class CtrlAccueil {
     private Button aproposBtn;
 
     @FXML
-    private Button desinscriptionBtn;
-
-    @FXML
     private Button fermerBtn;
 
     @FXML
