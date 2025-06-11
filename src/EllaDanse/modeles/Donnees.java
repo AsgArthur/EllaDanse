@@ -78,18 +78,70 @@ public class Donnees {
     }
 
     /**
-     * Ajoute un nouveau membre
+     * Ajoute un nouveau membre AVEC TÉLÉPHONE OBLIGATOIRE
      */
-    public static void ajouterMembre(String nom, String prenom, int age, String email,
+    public static void ajouterMembre(String nom, String prenom, int age, String email, String telephone,
                                      String saison, String cours, boolean membreBureau) {
-        Membre nouveau = new Membre(prochainIdMembre++, nom, prenom, age, email, saison, cours, membreBureau);
+        // Validation du téléphone obligatoire
+        if (telephone == null || telephone.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le numéro de téléphone est obligatoire");
+        }
+
+        // Validation des autres champs obligatoires
+        if (nom == null || nom.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le nom est obligatoire");
+        }
+        if (prenom == null || prenom.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le prénom est obligatoire");
+        }
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("L'email est obligatoire");
+        }
+        if (saison == null || saison.trim().isEmpty()) {
+            throw new IllegalArgumentException("La saison est obligatoire");
+        }
+        if (cours == null || cours.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le cours est obligatoire");
+        }
+
+        // Validation du format du téléphone (optionnel)
+        if (!isValidTelephone(telephone.trim())) {
+            throw new IllegalArgumentException("Le format du numéro de téléphone n'est pas valide");
+        }
+
+        // Vérifier que l'email n'existe pas déjà
+        if (emailExiste(email.trim())) {
+            throw new IllegalArgumentException("Cette adresse email est déjà utilisée");
+        }
+
+        Membre nouveau = new Membre(prochainIdMembre++, nom.trim(), prenom.trim(), age,
+                email.trim(), telephone.trim(), saison.trim(), cours.trim(), membreBureau);
         lesMembres.add(nouveau);
     }
 
     /**
-     * Ajoute un membre existant
+     * Ajoute un membre existant (avec validation)
      */
     public static void ajouterMembre(Membre membre) {
+        if (membre == null) {
+            throw new IllegalArgumentException("Le membre ne peut pas être null");
+        }
+
+        // Validation du téléphone obligatoire
+        if (membre.getTelephone() == null || membre.getTelephone().trim().isEmpty()) {
+            throw new IllegalArgumentException("Le numéro de téléphone est obligatoire");
+        }
+
+        // Validation du format du téléphone
+        if (!isValidTelephone(membre.getTelephone().trim())) {
+            throw new IllegalArgumentException("Le format du numéro de téléphone n'est pas valide");
+        }
+
+        // Vérifier que l'email n'existe pas déjà
+        if (emailExiste(membre.getEmail(), membre.getId())) {
+            throw new IllegalArgumentException("Cette adresse email est déjà utilisée");
+        }
+
         if (membre.getId() == 0) {
             membre.setId(prochainIdMembre++);
         }
@@ -97,19 +149,37 @@ public class Donnees {
     }
 
     /**
-     * Modifie un membre existant
+     * Modifie un membre existant AVEC TÉLÉPHONE OBLIGATOIRE
      */
-    public static void modifierMembre(int id, String nom, String prenom, int age, String email,
+    public static void modifierMembre(int id, String nom, String prenom, int age, String email, String telephone,
                                       String saison, String cours, boolean membreBureau) {
         Membre membre = getMembreById(id);
         if (membre != null) {
-            membre.setNom(nom);
-            membre.setPrenom(prenom);
+            // Validation du téléphone obligatoire
+            if (telephone == null || telephone.trim().isEmpty()) {
+                throw new IllegalArgumentException("Le numéro de téléphone est obligatoire");
+            }
+
+            // Validation du format du téléphone
+            if (!isValidTelephone(telephone.trim())) {
+                throw new IllegalArgumentException("Le format du numéro de téléphone n'est pas valide");
+            }
+
+            // Vérifier que l'email n'existe pas déjà (en excluant ce membre)
+            if (emailExiste(email.trim(), id)) {
+                throw new IllegalArgumentException("Cette adresse email est déjà utilisée");
+            }
+
+            membre.setNom(nom.trim());
+            membre.setPrenom(prenom.trim());
             membre.setAge(age);
-            membre.setEmail(email);
-            membre.setSaison(saison);
-            membre.setCours(cours);
+            membre.setEmail(email.trim());
+            membre.setTelephone(telephone.trim());
+            membre.setSaison(saison.trim());
+            membre.setCours(cours.trim());
             membre.setMembreBureau(membreBureau);
+        } else {
+            throw new IllegalArgumentException("Membre avec l'ID " + id + " introuvable");
         }
     }
 
@@ -203,6 +273,61 @@ public class Donnees {
     }
 
     /**
+     * Vérifie si un numéro de téléphone est déjà utilisé
+     */
+    public static boolean telephoneExiste(String telephone) {
+        return lesMembres.stream()
+                .anyMatch(m -> m.getTelephone().equals(telephone));
+    }
+
+    /**
+     * Vérifie si un numéro de téléphone est déjà utilisé (en excluant un membre spécifique)
+     */
+    public static boolean telephoneExiste(String telephone, int idMembre) {
+        return lesMembres.stream()
+                .filter(m -> m.getId() != idMembre)
+                .anyMatch(m -> m.getTelephone().equals(telephone));
+    }
+
+    /**
+     * Valide le format d'un numéro de téléphone
+     * Accepte : 0123456789, 01.23.45.67.89, 01 23 45 67 89, +33123456789, etc.
+     */
+    public static boolean isValidTelephone(String telephone) {
+        if (telephone == null || telephone.trim().isEmpty()) {
+            return false;
+        }
+
+        // Nettoyer le numéro (enlever espaces, points, tirets)
+        String telephoneNettoye = telephone.replaceAll("[\\s\\.-]", "");
+
+        // Vérifier les formats français courants
+        return telephoneNettoye.matches("^(?:(?:\\+33|0)[1-9](?:[0-9]{8}))$") ||  // Format français
+                telephoneNettoye.matches("^[0-9]{10}$") ||                          // 10 chiffres
+                telephoneNettoye.matches("^\\+[0-9]{10,15}$");                      // Format international
+    }
+
+    /**
+     * Formate un numéro de téléphone en format français standard
+     */
+    public static String formaterTelephone(String telephone) {
+        if (telephone == null) return "";
+
+        String telephoneNettoye = telephone.replaceAll("[\\s\\.-]", "");
+
+        // Si c'est un numéro français à 10 chiffres commençant par 0
+        if (telephoneNettoye.matches("^0[1-9][0-9]{8}$")) {
+            return telephoneNettoye.substring(0, 2) + "." +
+                    telephoneNettoye.substring(2, 4) + "." +
+                    telephoneNettoye.substring(4, 6) + "." +
+                    telephoneNettoye.substring(6, 8) + "." +
+                    telephoneNettoye.substring(8, 10);
+        }
+
+        return telephone; // Retourner tel quel si format non reconnu
+    }
+
+    /**
      * Réinitialise toutes les données
      */
     public static void reinitialiserDonnees() {
@@ -212,7 +337,7 @@ public class Donnees {
         initialiserDonneesTest();
     }
 
-    // ========== DONNÉES DE TEST ==========
+    // ========== DONNÉES DE TEST AVEC TÉLÉPHONES ==========
 
     private static void initialiserDonneesTest() {
         // Ajout des cours
@@ -232,18 +357,22 @@ public class Donnees {
 
         lesCours.add(new Cours("Salsa", "Tous niveaux", "Carmen Rodriguez", "Samedi 14h-15h30"));
 
-        // Ajout des membres
-        ajouterMembre("Dupont", "Marie", 25, "marie.dupont@email.com", "2024-2025", "Jazz - Intermédiaire", false);
-        ajouterMembre("Martin", "Pierre", 30, "pierre.martin@email.com", "2024-2025", "Classique - Avancé", true);
-        ajouterMembre("Bernard", "Sophie", 22, "sophie.bernard@email.com", "2023-2024", "Contemporain - Débutant", false);
-        ajouterMembre("Durand", "Jean", 28, "jean.durand@email.com", "2024-2025", "Hip-Hop - Intermédiaire", true);
-        ajouterMembre("Moreau", "Emma", 19, "emma.moreau@email.com", "2024-2025", "Jazz - Débutant", false);
-        ajouterMembre("Petit", "Lucas", 35, "lucas.petit@email.com", "2023-2024", "Salsa - Tous niveaux", false);
-        ajouterMembre("Roux", "Chloé", 27, "chloe.roux@email.com", "2024-2025", "Classique - Intermédiaire", true);
-        ajouterMembre("Lefevre", "Thomas", 24, "thomas.lefevre@email.com", "2024-2025", "Hip-Hop - Débutant", false);
-        ajouterMembre("Garcia", "Ana", 31, "ana.garcia@email.com", "2023-2024", "Salsa - Tous niveaux", false);
-        ajouterMembre("Dubois", "Julie", 26, "julie.dubois@email.com", "2024-2025", "Contemporain - Intermédiaire", false);
-        ajouterMembre("Fournier", "Alexandre", 29, "alex.fournier@email.com", "2024-2025", "Jazz - Avancé", true);
-        ajouterMembre("Lambert", "Camille", 23, "camille.lambert@email.com", "2024-2025", "Classique - Débutant", false);
+        // Ajout des membres AVEC TÉLÉPHONES
+        try {
+            ajouterMembre("Dupont", "Marie", 25, "marie.dupont@email.com", "01.23.45.67.89", "2024-2025", "Jazz - Intermédiaire", false);
+            ajouterMembre("Martin", "Pierre", 30, "pierre.martin@email.com", "01.34.56.78.90", "2024-2025", "Classique - Avancé", true);
+            ajouterMembre("Bernard", "Sophie", 22, "sophie.bernard@email.com", "01.45.67.89.01", "2023-2024", "Contemporain - Débutant", false);
+            ajouterMembre("Durand", "Jean", 28, "jean.durand@email.com", "01.56.78.90.12", "2024-2025", "Hip-Hop - Intermédiaire", true);
+            ajouterMembre("Moreau", "Emma", 19, "emma.moreau@email.com", "01.67.89.01.23", "2024-2025", "Jazz - Débutant", false);
+            ajouterMembre("Petit", "Lucas", 35, "lucas.petit@email.com", "01.78.90.12.34", "2023-2024", "Salsa - Tous niveaux", false);
+            ajouterMembre("Roux", "Chloé", 27, "chloe.roux@email.com", "01.89.01.23.45", "2024-2025", "Classique - Intermédiaire", true);
+            ajouterMembre("Lefevre", "Thomas", 24, "thomas.lefevre@email.com", "01.90.12.34.56", "2024-2025", "Hip-Hop - Débutant", false);
+            ajouterMembre("Garcia", "Ana", 31, "ana.garcia@email.com", "01.01.23.45.67", "2023-2024", "Salsa - Tous niveaux", false);
+            ajouterMembre("Dubois", "Julie", 26, "julie.dubois@email.com", "01.12.34.56.78", "2024-2025", "Contemporain - Intermédiaire", false);
+            ajouterMembre("Fournier", "Alexandre", 29, "alex.fournier@email.com", "01.23.45.67.90", "2024-2025", "Jazz - Avancé", true);
+            ajouterMembre("Lambert", "Camille", 23, "camille.lambert@email.com", "01.34.56.78.01", "2024-2025", "Classique - Débutant", false);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Erreur lors de l'initialisation des données de test : " + e.getMessage());
+        }
     }
 }

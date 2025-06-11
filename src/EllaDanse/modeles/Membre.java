@@ -4,20 +4,22 @@ import javafx.beans.property.*;
 
 public class Membre {
     private IntegerProperty id;
-    private static StringProperty nom;
+    private StringProperty nom;
     private StringProperty prenom;
     private IntegerProperty age;
     private StringProperty email;
     private StringProperty saison;
     private StringProperty cours;
     private BooleanProperty membreBureau;
+    private StringProperty telephone;
 
-    public Membre(int id, String nom, String prenom, int age, String email, String saison, String cours, boolean membreBureau) {
+    public Membre(int id, String nom, String prenom, int age, String email, String telephone, String saison, String cours, boolean membreBureau) {
         this.id = new SimpleIntegerProperty(id);
         this.nom = new SimpleStringProperty(nom);
         this.prenom = new SimpleStringProperty(prenom);
         this.age = new SimpleIntegerProperty(age);
         this.email = new SimpleStringProperty(email);
+        this.telephone = new SimpleStringProperty(telephone);
         this.saison = new SimpleStringProperty(saison);
         this.cours = new SimpleStringProperty(cours);
         this.membreBureau = new SimpleBooleanProperty(membreBureau);
@@ -32,6 +34,7 @@ public class Membre {
     public String getSaison() { return saison.get(); }
     public String getCours() { return cours.get(); }
     public boolean isMembreBureau() { return membreBureau.get(); }
+    public String getTelephone() { return telephone.get(); }
 
     // Setters
     public void setId(int id) { this.id.set(id); }
@@ -42,6 +45,7 @@ public class Membre {
     public void setSaison(String saison) { this.saison.set(saison); }
     public void setCours(String cours) { this.cours.set(cours); }
     public void setMembreBureau(boolean membreBureau) { this.membreBureau.set(membreBureau); }
+    public void setTelephone(String telephone) { this.telephone.set(telephone); }
 
     // Properties (pour les bindings JavaFX)
     public IntegerProperty idProperty() { return id; }
@@ -52,4 +56,5 @@ public class Membre {
     public StringProperty saisonProperty() { return saison; }
     public StringProperty coursProperty() { return cours; }
     public BooleanProperty membreBureauProperty() { return membreBureau; }
+    public StringProperty telephoneProperty() { return telephone; }
 }
