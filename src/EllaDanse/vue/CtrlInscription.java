@@ -38,6 +38,16 @@ public class CtrlInscription {
     @FXML
     private Button validerBtn;
 
+    public void initialize(){
+        validerBtn.disableProperty().bind(
+                nomField.textProperty().isEmpty()
+                        .or(prenomField.textProperty().isEmpty())
+                        .or(telephoneField.textProperty().isEmpty())
+                        .or(dateNaissancePicker.valueProperty().isNull())
+                        .or(saisonComboBox.valueProperty().isNull())
+        );
+    }
+
     @FXML
     void annuler(ActionEvent event) {
         Main.closeInscription();
@@ -51,43 +61,22 @@ public class CtrlInscription {
 
     @FXML
     void validerInscription(ActionEvent event) {
-        if (nomField.getText().isEmpty()) {
+        String telephone = telephoneField.getText().trim();
+        if (!telephone.matches("\\d{10}")) {
             event.consume();
-            Alert erreur = new Alert(Alert.AlertType.ERROR, "Veuillez remplir le champ Nom.", ButtonType.OK);
-            erreur.setTitle("Nom : champ requis");
-            erreur.showAndWait();
-        }
-        else if (prenomField.getText().isEmpty()) {
-            event.consume();
-            Alert erreur = new Alert(Alert.AlertType.ERROR, "Veuillez remplir le champ Prénom.", ButtonType.OK);
-            erreur.setTitle("Prénom : champ requis");
+            Alert erreur = new Alert(Alert.AlertType.ERROR, "Le numéro de téléphone doit contenir exactement 10 chiffres.", ButtonType.OK);
+            erreur.setTitle("Téléphone : format invalide");
             erreur.showAndWait();
         }
 
-        else if (telephoneField.getText().isEmpty()) {
+        else if (dateNaissancePicker.getValue().isAfter(java.time.LocalDate.now())) {
             event.consume();
-            Alert erreur = new Alert(Alert.AlertType.ERROR, "Veuillez remplir le champ Téléphone.", ButtonType.OK);
-            erreur.setTitle("Téléphone : champ requis");
+            Alert erreur = new Alert(Alert.AlertType.ERROR, "La date de naissance doit être antérieure à aujourd’hui.", ButtonType.OK);
+            erreur.setTitle("Date de naissance : invalide");
             erreur.showAndWait();
         }
 
-        else if (dateNaissancePicker.getValue() == null) {
-            event.consume();
-            Alert erreur = new Alert(Alert.AlertType.ERROR, "Veuillez sélectionner une date de naissance.", ButtonType.OK);
-            erreur.setTitle("Date de naissance : champ requis");
-            erreur.showAndWait();
-        }
-
-        else if (saisonComboBox.getValue() == null) {
-            event.consume();
-            Alert erreur = new Alert(Alert.AlertType.ERROR, "Veuillez sélectionner une saison.", ButtonType.OK);
-            erreur.setTitle("Saison : champ requis");
-            erreur.showAndWait();
-            return;
-        }
-        else{
-            Main.closeInscription();
-        }
+        else {Main.closeInscription();}
     }
 
 }
