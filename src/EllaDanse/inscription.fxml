@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.InscriptionController">
+            fx:controller="vue.CrtlInscription">
 
     <top>
         <VBox spacing="5">
