@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="EllaDanse.controllers.CtrlAccueil">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EllaDanse.controllers.CtrlAccueil">
 
     <top>
         <VBox spacing="10" style="-fx-background-color: #2196f3;">
@@ -58,7 +58,7 @@
 
                 <Region HBox.hgrow="ALWAYS" />
 
-                <Button fx:id="fermerBtn" onAction="#handleAPropos" prefWidth="100" text="Fermer" />
+                <Button fx:id="fermerBtn" onAction="#fermerAccueil" prefWidth="100" text="Fermer" />
             <Button fx:id="aproposBtn" onAction="#handleAPropos" prefWidth="100" text="À propos" />
             </HBox>
         </VBox>

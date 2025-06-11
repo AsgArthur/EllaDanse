@@ -1,5 +1,6 @@
 package EllaDanse.controllers;
 
+import EllaDanse.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -29,6 +30,11 @@ public class CtrlAccueil {
     private Button profilBtn;
 
     @FXML
+    void fermerAccueil(ActionEvent event) {
+        Main.fermerAppli();
+    }
+
+    @FXML
     void handleAPropos(ActionEvent event) {
 
     }
@@ -54,4 +60,3 @@ public class CtrlAccueil {
     }
 
 }
-
