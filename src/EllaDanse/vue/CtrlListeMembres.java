@@ -1,6 +1,6 @@
 package EllaDanse.vue;
 
-import EllaDanse.modeles.Membre;
+import EllaDanse.modeles.Donnees;
 import EllaDanse.modeles.Membre;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -34,7 +34,7 @@ public class CtrlListeMembres {
     @FXML private ComboBox<String> saisonComboBox;
     @FXML private ComboBox<String> triComboBox;
 
-    private ObservableList<Membre> tousLesMembres = FXCollections.observableArrayList();
+    private ObservableList<Membre> tousLesMembres;
     private FilteredList<Membre> membresFiltres;
     private SortedList<Membre> membresTries;
 
@@ -83,6 +83,7 @@ public class CtrlListeMembres {
             Optional<ButtonType> resultat = confirmation.showAndWait();
             if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
                 tousLesMembres.remove(membreSelectionne);
+                Donnees.supprimerMembre(membreSelectionne);
 
                 Alert info = new Alert(Alert.AlertType.INFORMATION);
                 info.setTitle("Suppression réussie");
@@ -172,8 +173,8 @@ public class CtrlListeMembres {
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
         coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
 
-        // Initialiser les données de test
-        initialiserDonnees();
+        // Récupérer les données depuis Donnees
+        tousLesMembres = Donnees.getLesMembres();
 
         // Configurer les listes filtrées et triées
         membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
@@ -193,12 +194,10 @@ public class CtrlListeMembres {
         triComboBox.setValue("Alphabétique");
 
         // Saisons disponibles
-        Set<String> saisons = tousLesMembres.stream()
-                .map(Membre::getSaison)
-                .collect(Collectors.toSet());
+        List<String> saisons = Donnees.getLesSaisons();
         saisonComboBox.getItems().clear();
         saisonComboBox.getItems().add("Toutes");
-        saisonComboBox.getItems().addAll(saisons.stream().sorted().collect(Collectors.toList()));
+        saisonComboBox.getItems().addAll(saisons);
         saisonComboBox.setValue("Toutes");
 
         // Désactiver les boutons si aucune sélection
