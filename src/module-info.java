@@ -1,0 +1,3 @@
+module EllaDanse {
+    requires javafx.
+}
