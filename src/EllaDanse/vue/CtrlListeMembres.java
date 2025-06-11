@@ -257,7 +257,7 @@ public class CtrlListeMembres {
     // ===== NOUVELLES MÉTHODES POUR OUVRIR LES FENÊTRES =====
 
     private void ouvrirFenetreProfil(Membre membre) throws IOException {
-
+        Main.openProfil();
     }
 
     private void appliquerFiltres() {
