@@ -1,4 +1,4 @@
-package EllaDanse;
+package controller;
 
 import java.io.File;
 
@@ -21,7 +21,7 @@ public class FenAccueil extends Stage {
     }
 
     private Pane creerSceneGraph() throws IOException {
-        File f = new File("C:Users/gadri/Documents/cours/devApp/SAE/ellaDanse/src/acceuil.fxml");
+        File f = new File("src/EllaDanse/acceuil.fxml");
         FXMLLoader loader;
         loader = new FXMLLoader(f.toURI().toURL());
         Pane racine = loader.load();
