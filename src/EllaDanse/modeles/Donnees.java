@@ -223,21 +223,21 @@ public class Donnees {
 
     private static void initialiserDonneesTest() {
         // Ajout des cours
-        lesCours.add(new Cours("Jazz", "Débutant", "Marie Leclerc", "Lundi 18h-19h30"));
-        lesCours.add(new Cours("Jazz", "Intermédiaire", "Marie Leclerc", "Mardi 19h-20h30"));
-        lesCours.add(new Cours("Jazz", "Avancé", "Marie Leclerc", "Jeudi 20h-21h30"));
+        lesCours.add(new Cours("Jazz", "Débutant", "Marie Leclerc", "Lundi 18h-19h30", "2023-2024"));
+        lesCours.add(new Cours("Jazz", "Intermédiaire", "Marie Leclerc", "Mardi 19h-20h30", "2023-2024"));
+        lesCours.add(new Cours("Jazz", "Avancé", "Marie Leclerc", "Jeudi 20h-21h30", "2023-2024"));
 
-        lesCours.add(new Cours("Classique", "Débutant", "Sophie Martin", "Lundi 17h-18h30"));
-        lesCours.add(new Cours("Classique", "Intermédiaire", "Sophie Martin", "Mercredi 18h-19h30"));
-        lesCours.add(new Cours("Classique", "Avancé", "Sophie Martin", "Vendredi 19h-20h30"));
+        lesCours.add(new Cours("Classique", "Débutant", "Sophie Martin", "Lundi 17h-18h30", "2023-2024"));
+        lesCours.add(new Cours("Classique", "Intermédiaire", "Sophie Martin", "Mercredi 18h-19h30", "2023-2024"));
+        lesCours.add(new Cours("Classique", "Avancé", "Sophie Martin", "Vendredi 19h-20h30", "2023-2024"));
 
-        lesCours.add(new Cours("Contemporain", "Débutant", "Lucas Dubois", "Mardi 18h-19h30"));
-        lesCours.add(new Cours("Contemporain", "Intermédiaire", "Lucas Dubois", "Jeudi 18h-19h30"));
+        lesCours.add(new Cours("Contemporain", "Débutant", "Lucas Dubois", "Mardi 18h-19h30", "2023-2024"));
+        lesCours.add(new Cours("Contemporain", "Intermédiaire", "Lucas Dubois", "Jeudi 18h-19h30", "2023-2024"));
 
-        lesCours.add(new Cours("Hip-Hop", "Débutant", "Thomas Richard", "Mercredi 17h-18h30"));
-        lesCours.add(new Cours("Hip-Hop", "Intermédiaire", "Thomas Richard", "Vendredi 17h-18h30"));
+        lesCours.add(new Cours("Hip-Hop", "Débutant", "Thomas Richard", "Mercredi 17h-18h30", "2024-2025"));
+        lesCours.add(new Cours("Hip-Hop", "Intermédiaire", "Thomas Richard", "Vendredi 17h-18h30", "2023-2024"));
 
-        lesCours.add(new Cours("Salsa", "Tous niveaux", "Carmen Rodriguez", "Samedi 14h-15h30"));
+        lesCours.add(new Cours("Salsa", "Tous niveaux", "Carmen Rodriguez", "Samedi 14h-15h30", "2024-2025"));
 
         // Ajout des membres
         ajouterMembre("Dupont", "Marie", 25, "1999-06-12", "marie.dupont@email.com", "0601020304", "2024-2025", "Jazz - Intermédiaire", false);
