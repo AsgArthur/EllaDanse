@@ -1,20 +1,16 @@
 package EllaDanse;
 
+import EllaDanse.controllers.FenAccueil;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import modele.*;
-import vue.*;
 
 public class Main extends Application{
 
-    public void start(Stage f) throws Exception {
+    static private FenAccueil fAccueil;
 
-        Donnees.chargementDonnees();
-        //initialisation des fenêtres
-        fNouvEmp = new FenNouvelEmploye();
-        fModifierEmp = new FenModifierEmploye();
-        fListeEmp = new FenListeEmployes();
-        fListeEmp.show();
+    public void start(Stage f) throws Exception {
+        fAccueil = new FenAccueil();
+        fAccueil.show();
     }
 
     static public void main(String args[]) {
@@ -22,5 +18,6 @@ public class Main extends Application{
     }
 
     static public void fermerAppli() {
-
+        System.exit(0);
     }
+}
