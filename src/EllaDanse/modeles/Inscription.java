@@ -8,10 +8,10 @@ public class Inscription {
     private Cours cours;
     private String saison;
 
-    public Inscription(Membre membre, Cours cours, String saison){
+    public Inscription(Membre membre, Cours cours){
         this.membre = membre;
         this.cours = cours;
-        this.saison = saison;
+        this.saison = cours.getSaison();
     }
 
 
