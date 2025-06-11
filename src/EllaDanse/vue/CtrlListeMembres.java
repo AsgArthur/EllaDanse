@@ -2,6 +2,7 @@ package EllaDanse.vue;
 
 import EllaDanse.controller.Main;
 import EllaDanse.modeles.Donnees;
+import EllaDanse.modeles.Inscription;
 import EllaDanse.modeles.Membre;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -35,7 +36,9 @@ public class CtrlListeMembres {
     @FXML private TableColumn<Membre, Integer> ageCol;
     @FXML private TableColumn<Membre, String> emailCol;
     @FXML private TableColumn<Membre, String> saisonCol;
-    @FXML private TableColumn<Membre, String> coursCol;
+    @FXML private TableColumn<Membre, String> dateNaissanceCol;
+    @FXML private TableColumn<Membre, String> telephoneCol;
+
 
     @FXML private Label titreLabel;
     @FXML private Label totalMembresLabel;
@@ -143,7 +146,7 @@ public class CtrlListeMembres {
 
             case "Saison, cours et ordre alphabétique":
                 comparator = Comparator.comparing(Membre::getSaison)
-                        .thenComparing(Membre::getCours)
+                        .thenComparing(Inscription::getCours)
                         .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER);
                 break;
@@ -182,7 +185,8 @@ public class CtrlListeMembres {
         ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
-        coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
+        dateNaissanceCol.setCellValueFactory(new PropertyValueFactory<>("dateNaissance"));
+        telephoneCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
 
         // Style conditionnel sur les lignes
         membresTable.setRowFactory(tv -> {

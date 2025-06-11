@@ -68,15 +68,6 @@ public class Donnees {
     }
 
     /**
-     * Retourne les membres d'un cours spécifique
-     */
-    public static List<Membre> getMembresByCours(String cours) {
-        return lesMembres.stream()
-                .filter(m -> m.getCours().equals(cours))
-                .collect(Collectors.toList());
-    }
-
-    /**
      * Trouve un membre par son ID
      */
     public static Membre getMembreById(int id) {
@@ -91,7 +82,7 @@ public class Donnees {
      */
     public static void ajouterMembre(String nom, String prenom, int age, String dateNaissance, String email,
                                      String telephone, String saison, String cours, boolean membreBureau) {
-        Membre nouveau = new Membre(prochainIdMembre++, nom, prenom, age, dateNaissance, email, telephone, saison, cours, membreBureau);
+        Membre nouveau = new Membre(prochainIdMembre++, nom, prenom, age, dateNaissance, email, telephone, saison, membreBureau);
         lesMembres.add(nouveau);
     }
 
@@ -119,7 +110,6 @@ public class Donnees {
             membre.setEmail(email);
             membre.setTelephone(telephone);
             membre.setSaison(saison);
-            membre.setCours(cours);
             membre.setMembreBureau(membreBureau);
         }
     }

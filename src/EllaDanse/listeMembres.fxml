@@ -58,9 +58,10 @@
                 <TableColumn fx:id="nomCol" text="Nom" />
                 <TableColumn fx:id="prenomCol" text="Prénom" />
                 <TableColumn fx:id="ageCol" text="Âge" />
-                <TableColumn fx:id="emailCol" text="Email" />
-                <TableColumn fx:id="saisonCol" text="Saison" />
-                <TableColumn fx:id="coursCol" text="Cours" />
+            <TableColumn fx:id="dateNaissanceCol" prefWidth="132.0" text="Date de Naissance" />
+                <TableColumn fx:id="emailCol" prefWidth="182.6666259765625" text="Email" />
+            <TableColumn fx:id="telephoneCol" minWidth="4.0" prefWidth="130.66668701171875" text="Téléphone" />
+                <TableColumn fx:id="saisonCol" minWidth="0.0" prefWidth="87.9998779296875" text="Saison" />
             </columns>
             <placeholder>
                 <VBox alignment="CENTER" spacing="10">
@@ -85,7 +86,7 @@
 
                 <Button fx:id="profilBtn" disable="true" onAction="#ouvrirProfilMembre" prefWidth="100" style="-fx-background-color: #9c27b0; -fx-text-fill: white;" text="Voir profil" />
                 <Button fx:id="supprimerBtn" disable="true" onAction="#supprimerMembre" prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Supprimer" />
-                <Button fx:id="retourBtn" cancelButton="true" onAction="#fermerPage" prefWidth="90"  text="Retour" />
+                <Button fx:id="retourBtn" cancelButton="true" onAction="#fermerPage" prefWidth="90" text="Retour" />
             </HBox>
         </VBox>
     </bottom>
