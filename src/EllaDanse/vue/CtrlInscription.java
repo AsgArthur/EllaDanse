@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 public class CtrlInscription {
-
+6
     @FXML
     private Button annulerBtn;
 
@@ -76,7 +76,7 @@ public class CtrlInscription {
             erreur.showAndWait();
         }
 
-        else {Main.closeInscription();}
+        else {Main.closeInscription();} 
     }
 
 }
