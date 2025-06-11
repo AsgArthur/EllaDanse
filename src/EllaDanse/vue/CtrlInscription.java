@@ -50,6 +50,9 @@ public class CtrlInscription {
     @FXML
     private Button validerBtn;
 
+    @FXML
+    private TextField ageField;
+
     private boolean mbBureau;
 
     public void initialize(){
@@ -60,6 +63,7 @@ public class CtrlInscription {
                         .or(emailField.textProperty().isEmpty())
                         .or(dateNaissancePicker.valueProperty().isNull())
                         .or(saisonComboBox.valueProperty().isNull())
+                        .or(ageField.textProperty().isEmpty())
                         .or(cbOui.selectedProperty().not().and(cbNon.selectedProperty().not()))
         );
         cbOui.disableProperty().bind(cbNon.selectedProperty());
@@ -115,8 +119,8 @@ public class CtrlInscription {
 
         else {
             Main.closeInscription();
-            //Donnees.ajouterMembre(nomField.getText(), prenomField.getText(), dateNaissancePicker.getValue().toString(), emailField.getText(),
-                   // telephoneField.getText(), String saison,mbBureau;
+            Donnees.ajouterMembre(nomField.getText(), prenomField.getText(),ageField.getText(), dateNaissancePicker.getValue().toString(), emailField.getText(),
+                telephoneField.getText(), saisonComboBox.getValue(),mbBureau);
         }
     }
 
