@@ -83,6 +83,8 @@
                         prefWidth="100" style="-fx-background-color: #9c27b0; -fx-text-fill: white;" disable="true"/>
                 <Button fx:id="supprimerBtn" text="Supprimer" onAction="#supprimerMembre"
                         prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" disable="true"/>
+                <Button fx:id="retourBtn" text="Retour" onAction="#fermerPage"
+                        prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" disable="true"/>
             </HBox>
         </VBox>
     </bottom>
