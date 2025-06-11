@@ -42,6 +42,7 @@ public class CtrlListeMembres {
     @FXML private ToggleButton bureauToggle;
     @FXML private Button profilBtn;
     @FXML private Button supprimerBtn;
+    @FXML private Button retourBtn;
     @FXML private TextField rechercheField;
     @FXML private ComboBox<String> saisonComboBox;
     @FXML private ComboBox<String> triComboBox;
