@@ -13,7 +13,7 @@ public class FenListeMembres extends Stage {
     private CtrlListeMembres ctrl;
 
     public FenListeMembres() throws IOException {
-        this.setTitle("Accueil EllaDanse");
+        this.setTitle("Liste des membre EllaDanse");
         this.setResizable(false);
         Scene laScene = new Scene(creerSceneGraph());
         this.setScene(laScene);
