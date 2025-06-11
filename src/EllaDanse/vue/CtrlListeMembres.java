@@ -1,5 +1,6 @@
 package EllaDanse.vue;
 
+import EllaDanse.controller.Main;
 import EllaDanse.modeles.Donnees;
 import EllaDanse.modeles.Membre;
 import javafx.beans.binding.Bindings;
@@ -271,6 +272,6 @@ public class CtrlListeMembres {
     }
 
     public void fermerPage(ActionEvent actionEvent) {
-        Main.closeListeMembres();
+        Main.closeListeMembre();
     }
 }
