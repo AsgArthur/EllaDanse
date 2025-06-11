@@ -1,9 +1,6 @@
 package EllaDanse.controller;
 
-import EllaDanse.vue.FenAccueil;
-import EllaDanse.vue.FenDesinscription;
-import EllaDanse.vue.FenInscription;
-import EllaDanse.vue.FenListeMembres;
+import EllaDanse.vue.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -13,12 +10,14 @@ public class Main extends Application{
     static private FenInscription fInscription;
     static private FenListeMembres fListeMembres;
     static private FenDesinscription fDesinscription;
+    static private FenProfil fProfil;
 
     public void start(Stage f) throws Exception {
         fAccueil = new FenAccueil();
         fInscription = new FenInscription();
         fListeMembres = new FenListeMembres();
         fDesinscription = new FenDesinscription();
+        fProfil = new FenProfil();
         fAccueil.show();
     }
 
@@ -50,6 +49,11 @@ public class Main extends Application{
     static public void closeDesinscription(){
         fDesinscription.close();
         fAccueil.show();
+    }
+
+    static public void  openProfil(){
+        fProfil.show();
+        fAccueil.close();
     }
 
     static public void fermerAppli() {
