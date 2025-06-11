@@ -85,7 +85,7 @@
 
                 <Button fx:id="profilBtn" disable="true" onAction="#ouvrirProfilMembre" prefWidth="100" style="-fx-background-color: #9c27b0; -fx-text-fill: white;" text="Voir profil" />
                 <Button fx:id="supprimerBtn" disable="true" onAction="#supprimerMembre" prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Supprimer" />
-                <Button fx:id="retourBtn" cancelButton="true" disable="true" onAction="#fermerPage" prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Retour" />
+                <Button fx:id="retourBtn" cancelButton="true" onAction="#fermerPage" prefWidth="90"  text="Retour" />
             </HBox>
         </VBox>
     </bottom>
