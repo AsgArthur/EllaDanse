@@ -126,44 +126,45 @@ public class CtrlListeMembres {
         String tri = triComboBox.getValue();
         if (tri == null) return;
 
-        Comparator<Membre> comparator = null;
+        Comparator<Membre> comparator;
 
         switch (tri) {
             case "Ordre alphabétique et saison":
-                comparator = Comparator.comparing(Membre::getNom)
-                        .thenComparing(Membre::getPrenom)
+                comparator = Comparator.comparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(Membre::getSaison);
                 break;
 
             case "Saison et ordre alphabétique":
                 comparator = Comparator.comparing(Membre::getSaison)
-                        .thenComparing(Membre::getNom)
-                        .thenComparing(Membre::getPrenom);
+                        .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER);
                 break;
 
             case "Saison, cours et ordre alphabétique":
                 comparator = Comparator.comparing(Membre::getSaison)
                         .thenComparing(Membre::getCours)
-                        .thenComparing(Membre::getNom)
-                        .thenComparing(Membre::getPrenom);
+                        .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER);
                 break;
 
             case "Saison, ordre alphabétique et cour":
                 comparator = Comparator.comparing(Membre::getSaison)
-                        .thenComparing(Membre::getNom)
-                        .thenComparing(Membre::getPrenom)
+                        .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(Membre::getCours);
                 break;
 
             default:
-                comparator = Comparator.comparing(Membre::getNom)
-                        .thenComparing(Membre::getPrenom);
+                comparator = Comparator.comparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER);
                 break;
         }
 
         membresTries.setComparator(comparator);
-        membresTable.setItems(membresTries); // pour forcer la mise à jour
+        membresTable.setItems(membresTries); // Réaffecter au cas où
     }
+
 
 
     @FXML
@@ -183,7 +184,7 @@ public class CtrlListeMembres {
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
         coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
 
-        // Configuration des lignes + style + double-clic
+        // Style conditionnel sur les lignes
         membresTable.setRowFactory(tv -> {
             TableRow<Membre> row = new TableRow<>();
             row.itemProperty().addListener((obs, oldVal, newVal) -> {
@@ -194,33 +195,45 @@ public class CtrlListeMembres {
                 }
             });
 
-            membresTable.setOnMouseClicked((MouseEvent e) -> {
-                if (( e.getClickCount()==2)
-                        && (e.getButton()== MouseButton.PRIMARY)
-                        && (e.getTarget() instanceof Text)) {
-                    Main.openProfil(membresTable.getSelectionModel().getSelectedItem());
+            // Double clic pour ouvrir le profil
+            row.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2 && e.getButton() == MouseButton.PRIMARY) {
+                    Membre membre = row.getItem();
+                    if (membre != null) {
+                        Main.openProfil(membre);
+                    }
                 }
             });
 
             return row;
         });
 
+        // Données de base
         tousLesMembres = Donnees.getLesMembres();
         membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
         membresTries = new SortedList<>(membresFiltres);
 
+        // Ne pas binder au comparatorProperty() du TableView ! (pour garder le tri personnalisé)
+        // membresTries.comparatorProperty().bind(membresTable.comparatorProperty());
 
         membresTable.setItems(membresTries);
 
+        // Configuration des comboBox
         configurerComboBoxes();
+
+        // Désactivation des boutons si aucun membre sélectionné
         profilBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
         supprimerBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
 
+        // Titre de départ
         titreLabel.setText("Liste de tous les membres (" + Donnees.getNombreTotalMembres() + ")");
         bureauToggle.setText("Voir membres bureau");
 
+        // Appliquer filtres + tri par défaut
         appliquerFiltres();
+        changerTri(); // très important pour appliquer le tri alphabétique dès le lancement
     }
+
 
     private void configurerComboBoxes() {
         // Options de tri disponibles

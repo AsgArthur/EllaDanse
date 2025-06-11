@@ -4,7 +4,7 @@ import javafx.beans.property.*;
 
 public class Membre {
     private IntegerProperty id;
-    private static StringProperty nom;
+    private StringProperty nom;
     private StringProperty prenom;
     private IntegerProperty age;
     private StringProperty dateNaissance;
