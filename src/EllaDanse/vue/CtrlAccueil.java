@@ -1,6 +1,6 @@
 package EllaDanse.vue;
 
-import EllaDanse.Main;
+import EllaDanse.controller.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

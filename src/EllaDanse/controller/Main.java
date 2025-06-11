@@ -1,4 +1,4 @@
-package EllaDanse;
+package EllaDanse.controller;
 
 import EllaDanse.vue.FenAccueil;
 import EllaDanse.vue.FenInscription;
