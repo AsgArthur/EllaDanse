@@ -1,7 +1,6 @@
 package EllaDanse.vue;
 
-import EllaDanse.*;
-import EllaDanse.modeles.Membre;
+import EllaDanse.modeles.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,80 +19,89 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class CtrlProfil {
+public class ProfilController {
 
     // Informations personnelles
     @FXML private Label nomLabel;
     @FXML private Label prenomLabel;
     @FXML private Label ageLabel;
-    @FXML private Label dateNaissanceLabel;
     @FXML private Label emailLabel;
-    @FXML private Label telephoneLabel;
-    @FXML private Label membreDepuisLabel;
+    @FXML private Label saisonLabel;
+    @FXML private Label coursLabel;
+    @FXML private Label statutLabel;
 
     // Statistiques
-    @FXML private Label totalInscriptionsLabel;
-    @FXML private Label saisonsActivesLabel;
-    @FXML private Label coursActuelsLabel;
+    @FXML private Label totalMembresLabel;
+    @FXML private Label membresBureauLabel;
+    @FXML private Label membresNormauxLabel;
 
-    // Tableau des inscriptions
-    @FXML private TableView<InscriptionViewModel> inscriptionsTable;
-    @FXML private TableColumn<InscriptionViewModel, String> saisonCol;
-    @FXML private TableColumn<InscriptionViewModel, String> coursCol;
-    @FXML private TableColumn<InscriptionViewModel, String> horaireCol;
-    @FXML private TableColumn<InscriptionViewModel, String> dateInscriptionCol;
-    @FXML private TableColumn<InscriptionViewModel, String> statutCol;
+    // Tableau des autres membres (pour comparaison)
+    @FXML private TableView<Membre> autresMembresTable;
+    @FXML private TableColumn<Membre, Integer> idCol;
+    @FXML private TableColumn<Membre, String> nomCol;
+    @FXML private TableColumn<Membre, String> prenomCol;
+    @FXML private TableColumn<Membre, Integer> ageCol;
+    @FXML private TableColumn<Membre, String> emailCol;
+    @FXML private TableColumn<Membre, String> saisonCol;
+    @FXML private TableColumn<Membre, String> coursCol;
+    @FXML private TableColumn<Membre, String> statutCol;
 
     // Boutons
     @FXML private Button modifierBtn;
-    @FXML private Button ajouterInscriptionBtn;
-    @FXML private Button supprimerInscriptionBtn;
+    @FXML private Button supprimerBtn;
     @FXML private Button fermerBtn;
 
     // Filtres
     @FXML private ComboBox<String> filtreSaisonComboBox;
-    @FXML private CheckBox afficherInactivesCheckBox;
+    @FXML private ComboBox<String> filtreCoursComboBox;
+    @FXML private CheckBox afficherBureauCheckBox;
 
-    private GestionMembres gestionMembres;
-    private Membre membre;
-    private ObservableList<InscriptionViewModel> inscriptionsViewModel;
+    private Membre membreCourant;
 
     @FXML
     public void initialize() {
-        gestionMembres = GestionMembres.getInstance();
-
-        // Configurer le tableau des inscriptions
-        configurerTableauInscriptions();
+        // Configurer le tableau des autres membres
+        configurerTableauAutresMembres();
 
         // Configurer les filtres
         configurerFiltres();
+
+        // Charger les statistiques générales
+        chargerStatistiques();
 
         // État initial des boutons
         mettreAJourEtatBoutons();
     }
 
     public void setMembre(Membre membre) {
-        this.membre = membre;
+        this.membreCourant = membre;
         if (membre != null) {
-            chargerInformationsPersonnelles();
-            chargerStatistiques();
-            chargerInscriptions();
+            chargerInformationsMembre();
+            chargerAutresMembres();
         }
     }
 
-    private void configurerTableauInscriptions() {
+    private void configurerTableauAutresMembres() {
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        prenomCol.setCellValueFactory(new PropertyValueFactory<>("prenom"));
+        ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
         coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
-        horaireCol.setCellValueFactory(new PropertyValueFactory<>("horaire"));
-        dateInscriptionCol.setCellValueFactory(new PropertyValueFactory<>("dateInscription"));
-        statutCol.setCellValueFactory(new PropertyValueFactory<>("statut"));
 
-        // Style pour les inscriptions inactives
-        inscriptionsTable.setRowFactory(tv -> {
-            TableRow<InscriptionViewModel> row = new TableRow<>();
+        // Colonne statut avec style
+        statutCol.setCellValueFactory(cellData -> {
+            boolean estBureau = cellData.getValue().isMembreBureau();
+            return new javafx.beans.property.SimpleStringProperty(estBureau ? "Bureau" : "Membre");
+        });
+
+        // Style pour les membres du bureau
+        autresMembresTable.setRowFactory(tv -> {
+            TableRow<Membre> row = new TableRow<>();
             row.itemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null && !newValue.isActive()) {
-                    row.setStyle("-fx-background-color: #f0f0f0; -fx-text-fill: gray;");
+                if (newValue != null && newValue.isMembreBureau()) {
+                    row.setStyle("-fx-background-color: #e3f2fd; -fx-font-weight: bold;");
                 } else {
                     row.setStyle("");
                 }
@@ -101,135 +109,106 @@ public class CtrlProfil {
             return row;
         });
 
-        inscriptionsTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        autresMembresTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
     private void configurerFiltres() {
-        // Initialiser le filtre de saison
+        // Filtres de saison
         filtreSaisonComboBox.getItems().add("Toutes les saisons");
-        filtreSaisonComboBox.getItems().addAll(gestionMembres.getSaisons());
+        filtreSaisonComboBox.getItems().addAll(Donnees.getLesSaisons());
         filtreSaisonComboBox.setValue("Toutes les saisons");
 
-        // Configurer la checkbox pour les inscriptions inactives
-        afficherInactivesCheckBox.setSelected(true);
+        // Filtres de cours
+        filtreCoursComboBox.getItems().add("Tous les cours");
+        filtreCoursComboBox.getItems().addAll(Donnees.getLesNomsCours());
+        filtreCoursComboBox.setValue("Tous les cours");
+
+        // Checkbox pour afficher les membres du bureau
+        afficherBureauCheckBox.setSelected(true);
     }
 
     // Actions FXML
     @FXML
     public void onFiltreSaisonChanged() {
-        filtrerInscriptions();
+        filtrerAutresMembres();
     }
 
     @FXML
-    public void onAfficherInactivesChanged() {
-        filtrerInscriptions();
+    public void onFiltreCoursChanged() {
+        filtrerAutresMembres();
     }
 
     @FXML
-    public void onInscriptionSelected() {
+    public void onAfficherBureauChanged() {
+        filtrerAutresMembres();
+    }
+
+    @FXML
+    public void onMembreSelected() {
         mettreAJourEtatBoutons();
     }
 
-    private void chargerInformationsPersonnelles() {
-        nomLabel.setText(membre.getNom());
-        prenomLabel.setText(membre.getPrenom());
-        ageLabel.setText(membre.getAge() + " ans");
+    private void chargerInformationsMembre() {
+        nomLabel.setText(membreCourant.getNom());
+        prenomLabel.setText(membreCourant.getPrenom());
+        ageLabel.setText(membreCourant.getAge() + " ans");
+        emailLabel.setText(membreCourant.getEmail());
+        saisonLabel.setText(membreCourant.getSaison());
+        coursLabel.setText(membreCourant.getCours());
+        statutLabel.setText(membreCourant.isMembreBureau() ? "Membre du bureau" : "Membre normal");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        dateNaissanceLabel.setText(membre.getDateNaissance().format(formatter));
-
-        emailLabel.setText(membre.getEmail().isEmpty() ? "Non renseigné" : membre.getEmail());
-        telephoneLabel.setText(membre.getTelephone().isEmpty() ? "Non renseigné" : membre.getTelephone());
-
-        // Date d'inscription (première inscription)
-        List<Inscription> inscriptions = gestionMembres.getInscriptionsByMembre(membre);
-        if (!inscriptions.isEmpty()) {
-            LocalDate premiereInscription = inscriptions.stream()
-                    .map(Inscription::getDateInscription)
-                    .min(LocalDate::compareTo)
-                    .orElse(LocalDate.now());
-            membreDepuisLabel.setText("Membre depuis le " + premiereInscription.format(formatter));
+        // Style du statut
+        if (membreCourant.isMembreBureau()) {
+            statutLabel.setStyle("-fx-text-fill: #1976d2; -fx-font-weight: bold;");
         } else {
-            membreDepuisLabel.setText("Aucune inscription");
+            statutLabel.setStyle("-fx-text-fill: #388e3c;");
         }
     }
 
     private void chargerStatistiques() {
-        List<Inscription> inscriptions = gestionMembres.getInscriptionsByMembre(membre);
-
-        totalInscriptionsLabel.setText(String.valueOf(inscriptions.size()));
-
-        // Nombre de saisons distinctes
-        long saisonsDistinctes = inscriptions.stream()
-                .map(Inscription::getSaison)
-                .distinct()
-                .count();
-        saisonsActivesLabel.setText(String.valueOf(saisonsDistinctes));
-
-        // Cours actuels (dernière saison)
-        if (!gestionMembres.getSaisons().isEmpty()) {
-            String derniereSaison = gestionMembres.getSaisons().get(gestionMembres.getSaisons().size() - 1);
-            long coursActuels = inscriptions.stream()
-                    .filter(i -> i.getSaison().equals(derniereSaison))
-                    .count();
-            coursActuelsLabel.setText(String.valueOf(coursActuels));
-        } else {
-            coursActuelsLabel.setText("0");
-        }
+        totalMembresLabel.setText(String.valueOf(Donnees.getNombreTotalMembres()));
+        membresBureauLabel.setText(String.valueOf(Donnees.getNombreMembresBureau()));
+        membresNormauxLabel.setText(String.valueOf(Donnees.getNombreTotalMembres() - Donnees.getNombreMembresBureau()));
     }
 
-    private void chargerInscriptions() {
-        List<Inscription> inscriptions = gestionMembres.getInscriptionsByMembre(membre);
+    private void chargerAutresMembres() {
+        // Charger tous les membres sauf le membre courant
+        List<Membre> autresMembres = Donnees.getLesMembres().stream()
+                .filter(m -> m.getId() != membreCourant.getId())
+                .collect(Collectors.toList());
 
-        inscriptionsViewModel = FXCollections.observableArrayList();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        for (Inscription inscription : inscriptions) {
-            InscriptionViewModel vm = new InscriptionViewModel(
-                    inscription.getSaison(),
-                    inscription.getCours().getNom(),
-                    inscription.getCours().getJour() + " " + inscription.getCours().getHoraireFormate(),
-                    inscription.getDateInscription().format(formatter),
-                    inscription.isActive() ? "Active" : "Inactive",
-                    inscription.isActive(),
-                    inscription
-            );
-            inscriptionsViewModel.add(vm);
-        }
-
-        // Trier par saison puis par cours
-        inscriptionsViewModel.sort((vm1, vm2) -> {
-            int saisonCompare = vm2.getSaison().compareTo(vm1.getSaison()); // Plus récent d'abord
-            if (saisonCompare == 0) {
-                return vm1.getCours().compareTo(vm2.getCours());
-            }
-            return saisonCompare;
-        });
-
-        inscriptionsTable.setItems(inscriptionsViewModel);
-        filtrerInscriptions();
+        autresMembresTable.setItems(FXCollections.observableArrayList(autresMembres));
+        filtrerAutresMembres();
     }
 
-    private void filtrerInscriptions() {
-        if (inscriptionsViewModel == null) return;
-
+    private void filtrerAutresMembres() {
         String saisonFiltre = filtreSaisonComboBox.getValue();
-        boolean afficherInactives = afficherInactivesCheckBox.isSelected();
+        String coursFiltre = filtreCoursComboBox.getValue();
+        boolean afficherBureau = afficherBureauCheckBox.isSelected();
 
-        ObservableList<InscriptionViewModel> inscriptionsFiltrees = inscriptionsViewModel.stream()
-                .filter(vm -> {
-                    boolean saisonOk = "Toutes les saisons".equals(saisonFiltre) || vm.getSaison().equals(saisonFiltre);
-                    boolean statutOk = afficherInactives || vm.isActive();
-                    return saisonOk && statutOk;
+        List<Membre> membresFiltres = Donnees.getLesMembres().stream()
+                .filter(m -> m.getId() != membreCourant.getId()) // Exclure le membre courant
+                .filter(m -> {
+                    // Filtre par saison
+                    boolean saisonOk = "Toutes les saisons".equals(saisonFiltre) || m.getSaison().equals(saisonFiltre);
+
+                    // Filtre par cours
+                    boolean coursOk = "Tous les cours".equals(coursFiltre) || m.getCours().equals(coursFiltre);
+
+                    // Filtre par statut bureau
+                    boolean bureauOk = afficherBureau || !m.isMembreBureau();
+
+                    return saisonOk && coursOk && bureauOk;
                 })
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                .collect(Collectors.toList());
 
-        inscriptionsTable.setItems(inscriptionsFiltrees);
+        autresMembresTable.setItems(FXCollections.observableArrayList(membresFiltres));
     }
 
     private void mettreAJourEtatBoutons() {
-        boolean inscriptionSelectionnee = inscriptionsTable.getSelectionModel().getSelectedItem() != null;
-        supprimerInscriptionBtn.setDisable(!inscriptionSelectionnee);
+        boolean membreSelectionne = autresMembresTable.getSelectionModel().getSelectedItem() != null;
+        // Pour l'instant, on peut seulement visualiser les autres membres
+        // Les boutons modifier/supprimer concernent le membre courant
     }
 
     @FXML
@@ -237,96 +216,74 @@ public class CtrlProfil {
         try {
             ouvrirFenetreModification();
             // Recharger les informations après modification
-            chargerInformationsPersonnelles();
+            chargerInformationsMembre();
             chargerStatistiques();
+            chargerAutresMembres();
         } catch (IOException e) {
             afficherErreur("Erreur", "Impossible d'ouvrir la fenêtre de modification : " + e.getMessage());
         }
     }
 
     @FXML
-    public void ajouterInscription() {
-        try {
-            ouvrirFenetreInscription();
-            // Recharger les inscriptions après ajout
-            chargerInscriptions();
-            chargerStatistiques();
-        } catch (IOException e) {
-            afficherErreur("Erreur", "Impossible d'ouvrir la fenêtre d'inscription : " + e.getMessage());
-        }
-    }
+    public void supprimerMembre() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Supprimer le membre " + membreCourant.getNom() + " " + membreCourant.getPrenom() + " ?");
+        alert.setContentText("Cette action ne peut pas être annulée.");
 
-    @FXML
-    public void supprimerInscription() {
-        InscriptionViewModel inscriptionVM = inscriptionsTable.getSelectionModel().getSelectedItem();
-        if (inscriptionVM != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText("Supprimer cette inscription ?");
-            alert.setContentText("Cours : " + inscriptionVM.getCours() + "\n" +
-                    "Saison : " + inscriptionVM.getSaison() + "\n" +
-                    "Cette action ne peut pas être annulée.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            boolean supprime = Donnees.supprimerMembre(membreCourant);
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                Inscription inscription = inscriptionVM.getInscription();
-                gestionMembres.desinscrireMembre(
-                        inscription.getMembre(),
-                        inscription.getCours(),
-                        inscription.getSaison()
-                );
-
-                // Recharger
-                chargerInscriptions();
-                chargerStatistiques();
-
-                afficherInfo("Inscription supprimée avec succès.");
+            if (supprime) {
+                afficherInfo("Membre supprimé avec succès.");
+                fermer(); // Fermer la fenêtre car le membre n'existe plus
+            } else {
+                afficherErreur("Erreur", "Impossible de supprimer le membre.");
             }
         }
     }
 
     @FXML
     public void exporterProfil() {
-        if (membre != null) {
-            List<Inscription> inscriptions = gestionMembres.getInscriptionsByMembre(membre);
+        StringBuilder export = new StringBuilder();
+        export.append("=== PROFIL MEMBRE ===\n\n");
+        export.append("Nom : ").append(membreCourant.getNom()).append("\n");
+        export.append("Prénom : ").append(membreCourant.getPrenom()).append("\n");
+        export.append("Âge : ").append(membreCourant.getAge()).append(" ans\n");
+        export.append("Email : ").append(membreCourant.getEmail()).append("\n");
+        export.append("Saison : ").append(membreCourant.getSaison()).append("\n");
+        export.append("Cours : ").append(membreCourant.getCours()).append("\n");
+        export.append("Statut : ").append(membreCourant.isMembreBureau() ? "Membre du bureau" : "Membre normal").append("\n\n");
 
-            StringBuilder export = new StringBuilder();
-            export.append("=== PROFIL MEMBRE ===\n\n");
-            export.append("Nom complet : ").append(membre.getNomComplet()).append("\n");
-            export.append("Email : ").append(membre.getEmail().isEmpty() ? "Non renseigné" : membre.getEmail()).append("\n");
-            export.append("Téléphone : ").append(membre.getTelephone().isEmpty() ? "Non renseigné" : membre.getTelephone()).append("\n\n");
+        // Ajouter des statistiques contextuelles
+        List<Membre> memesCours = Donnees.getMembresByCours(membreCourant.getCours());
+        List<Membre> memeSaison = Donnees.getMembresBySaison(membreCourant.getSaison());
 
-            if (!inscriptions.isEmpty()) {
-                export.append("=== INSCRIPTIONS ===\n\n");
-                inscriptions.stream()
-                        .collect(Collectors.groupingBy(Inscription::getSaison))
-                        .entrySet().stream()
-                        .sorted((e1, e2) -> e2.getKey().compareTo(e1.getKey()))
-                        .forEach(entry -> {
-                            export.append("Saison ").append(entry.getKey()).append(" :\n");
-                            entry.getValue().forEach(inscription -> {
-                                Cours cours = inscription.getCours();
-                                export.append("  • ").append(cours.getNom())
-                                        .append(" - ").append(cours.getJour())
-                                        .append(" ").append(cours.getHoraireFormate()).append("\n");
-                            });
-                            export.append("\n");
-                        });
-            }
+        export.append("=== STATISTIQUES ===\n\n");
+        export.append("Membres dans le même cours : ").append(memesCours.size()).append("\n");
+        export.append("Membres dans la même saison : ").append(memeSaison.size()).append("\n");
+        export.append("Total membres association : ").append(Donnees.getNombreTotalMembres()).append("\n");
+        export.append("Membres du bureau : ").append(Donnees.getNombreMembresBureau()).append("\n");
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Export du profil");
-            alert.setHeaderText("Profil de " + membre.getNomComplet());
+        export.append("\n=== AUTRES MEMBRES DU MÊME COURS ===\n");
+        memesCours.stream()
+                .filter(m -> m.getId() != membreCourant.getId())
+                .forEach(m -> export.append("- ").append(m.getPrenom()).append(" ").append(m.getNom())
+                        .append(m.isMembreBureau() ? " (Bureau)" : "").append("\n"));
 
-            TextArea textArea = new TextArea(export.toString());
-            textArea.setEditable(false);
-            textArea.setPrefRowCount(20);
-            textArea.setPrefColumnCount(60);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Export du profil");
+        alert.setHeaderText("Profil de " + membreCourant.getPrenom() + " " + membreCourant.getNom());
 
-            alert.getDialogPane().setContent(textArea);
-            alert.setResizable(true);
-            alert.showAndWait();
-        }
+        TextArea textArea = new TextArea(export.toString());
+        textArea.setEditable(false);
+        textArea.setPrefRowCount(20);
+        textArea.setPrefColumnCount(60);
+
+        alert.getDialogPane().setContent(textArea);
+        alert.setResizable(true);
+        alert.showAndWait();
     }
 
     @FXML
@@ -341,28 +298,14 @@ public class CtrlProfil {
         loader.setLocation(fxmlFile.toURI().toURL());
         Parent root = loader.load();
 
-        InscriptionController inscriptionController = loader.getController();
-        inscriptionController.setMembreAModifier(membre);
+        // Passer le membre à modifier au contrôleur d'inscription
+        CtrlInscription inscriptionController = loader.getController();
+        if (inscriptionController != null) {
+            inscriptionController.setMembreAModifier(membreCourant);
+        }
 
         Stage stage = new Stage();
-        stage.setTitle("Modifier " + membre.getNomComplet());
-        stage.setScene(new Scene(root));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setResizable(false);
-        stage.showAndWait();
-    }
-
-    private void ouvrirFenetreInscription() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        File fxmlFile = new File("C:/Users/crena/IdeaProjects/ellaDane/ressources/application/inscription.fxml");
-        loader.setLocation(fxmlFile.toURI().toURL());
-        Parent root = loader.load();
-
-        InscriptionController inscriptionController = loader.getController();
-        inscriptionController.setMembreAModifier(membre); // Pour pré-remplir avec ce membre
-
-        Stage stage = new Stage();
-        stage.setTitle("Nouvelle inscription pour " + membre.getNomComplet());
+        stage.setTitle("Modifier " + membreCourant.getPrenom() + " " + membreCourant.getNom());
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
@@ -384,6 +327,4 @@ public class CtrlProfil {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-    // Classe interne pour le ViewModel des inscriptions
-    public
+}
