@@ -52,7 +52,7 @@ public class CtrlListeMembres {
         if (membreSelectionne != null) {
             try {
                 // Ouvrir la fenêtre de modification
-                ouvrirFenetreModification(membreSelectionne);
+                ouvrirFenetreProfil(membreSelectionne);
 
                 // Rafraîchir la table après modification
                 membresTable.refresh();
@@ -256,53 +256,8 @@ public class CtrlListeMembres {
 
     // ===== NOUVELLES MÉTHODES POUR OUVRIR LES FENÊTRES =====
 
-    private void ouvrirFenetreModification(Membre membre) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        File fxmlFile = new File("ressources/application/inscription.fxml");
-        loader.setLocation(fxmlFile.toURI().toURL());
-        Parent root = loader.load();
-
-        // Récupérer le contrôleur et passer le membre à modifier
-        Object controller = loader.getController();
-        if (controller != null) {
-            // Utiliser réflexion ou interface pour passer le membre
-            try {
-                controller.getClass().getMethod("setMembreAModifier", Membre.class).invoke(controller, membre);
-            } catch (Exception e) {
-                System.err.println("Impossible de passer le membre au contrôleur : " + e.getMessage());
-            }
-        }
-
-        Stage stage = new Stage();
-        stage.setTitle("Modifier " + membre.getPrenom() + " " + membre.getNom());
-        stage.setScene(new Scene(root));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setResizable(false);
-        stage.showAndWait();
-    }
-
     private void ouvrirFenetreProfil(Membre membre) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        File fxmlFile = new File("ressources/application/profil.fxml");
-        loader.setLocation(fxmlFile.toURI().toURL());
-        Parent root = loader.load();
-
-        // Récupérer le contrôleur et passer le membre
-        Object controller = loader.getController();
-        if (controller != null) {
-            try {
-                controller.getClass().getMethod("setMembre", Membre.class).invoke(controller, membre);
-            } catch (Exception e) {
-                System.err.println("Impossible de passer le membre au contrôleur : " + e.getMessage());
-            }
-        }
-
-        Stage stage = new Stage();
-        stage.setTitle("Profil de " + membre.getPrenom() + " " + membre.getNom());
-        stage.setScene(new Scene(root, 800, 600));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setResizable(false);
-        stage.showAndWait();
+        Main.openProfil();
     }
 
     private void appliquerFiltres() {
