@@ -1,6 +1,7 @@
 package EllaDanse.vue;
 
-import application.*;
+import EllaDanse.*;
+import EllaDanse.modeles.Membre;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ProfilController {
+public class CtrlProfil {
 
     // Informations personnelles
     @FXML private Label nomLabel;
