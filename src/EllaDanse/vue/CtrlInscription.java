@@ -119,8 +119,8 @@ public class CtrlInscription {
 
         else {
             Main.closeInscription();
-            Donnees.ajouterMembre(nomField.getText(), prenomField.getText(),ageField.getText(), dateNaissancePicker.getValue().toString(), emailField.getText(),
-                telephoneField.getText(), saisonComboBox.getValue(),mbBureau);
+            Donnees.ajouterMembre(nomField.getText(), prenomField.getText(),Integer.parseInt(ageField.getText()), dateNaissancePicker.getValue().toString(), emailField.getText(), telephoneField.getText(), saisonComboBox.getValue(),mbBureau);
+
         }
     }
 
