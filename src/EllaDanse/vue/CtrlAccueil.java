@@ -15,9 +15,6 @@ public class CtrlAccueil {
     private Button aproposBtn;
 
     @FXML
-    private Button desinscriptionBtn;
-
-    @FXML
     private Button fermerBtn;
 
     @FXML
@@ -50,8 +47,6 @@ public class CtrlAccueil {
     }
 
     @FXML
-    void ouvrirProfil(ActionEvent event) {
-
-    }
+    void ouvrirProfil(ActionEvent event) { Main.openProfil();}
 
 }
