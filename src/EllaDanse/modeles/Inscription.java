@@ -11,15 +11,12 @@ public class Inscription {
     public Inscription(Membre membre, Cours cours){
         this.membre = membre;
         this.cours = cours;
-        this.saison = cours.getSaison();
-    }
-
-    public String getPrenom(){
-        return membre.getPrenom();
-    }
-
-    public String getNom(){
-        return membre.getNom();
+        // Gérer le cas où cours est null
+        if (cours != null) {
+            this.saison = cours.getSaison();
+        } else {
+            this.saison = membre.getSaison(); // Utiliser la saison du membre si pas de cours
+        }
     }
 
     public Membre getMembre() {
@@ -31,7 +28,10 @@ public class Inscription {
     }
 
     public String getCours() {
-        return cours.getNom();
+        if (cours != null) {
+            return cours.getNom();
+        }
+        return "Aucun cours";
     }
 
     public Cours getVraiCours(){
@@ -39,10 +39,16 @@ public class Inscription {
     }
 
     public String getProfesseur() {
-        return cours.getProfesseur();
+        if (cours != null) {
+            return cours.getProfesseur();
+        }
+        return "-";
     }
 
     public String getHoraire() {
-        return cours.getHoraire();
+        if (cours != null) {
+            return cours.getHoraire();
+        }
+        return "-";
     }
 }
