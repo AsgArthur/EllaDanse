@@ -1,5 +1,5 @@
 package EllaDanse.controllers;
 
-public class CtrListeMembres {
+public class CtrlListeMembres {
 
 }
