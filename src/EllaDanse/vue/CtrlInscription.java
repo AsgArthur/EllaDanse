@@ -50,6 +50,8 @@ public class CtrlInscription {
     @FXML
     private Button validerBtn;
 
+    private boolean mbBureau;
+
     public void initialize(){
         validerBtn.disableProperty().bind(
                 nomField.textProperty().isEmpty()
@@ -69,7 +71,18 @@ public class CtrlInscription {
         saisonComboBox.setValue("Toutes");
 
         coursListView.setItems(Donnees.getLesCours());
-        coursListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        coursListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        saisonComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null || newVal.equals("Toutes")) {
+                coursListView.setItems(Donnees.getLesCours()); // affiche tous les cours
+            } else {
+                List<Cours> coursFiltres = Donnees.getLesCours().stream()
+                        .filter(c -> c.getSaison().equals(newVal))
+                        .collect(Collectors.toList());
+
+                coursListView.setItems(FXCollections.observableArrayList(coursFiltres));
+            }
+        });
     }
 
     @FXML
@@ -103,13 +116,15 @@ public class CtrlInscription {
         else {
             Main.closeInscription();
             //Donnees.ajouterMembre(nomField.getText(), prenomField.getText(), dateNaissancePicker.getValue().toString(), emailField.getText(),
-                   // telephoneField.getText(), String saison, String cours, boolean membreBureau;
+                   // telephoneField.getText(), String saison,mbBureau;
         }
     }
 
     public void cbOuiValider(ActionEvent event) {
+        mbBureau = true;
     }
 
     public void cbNonValider(ActionEvent event) {
+        mbBureau = false;
     }
 }
