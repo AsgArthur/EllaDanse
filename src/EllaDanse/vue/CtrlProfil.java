@@ -1,6 +1,9 @@
 package EllaDanse.vue;
 
-import EllaDanse.modeles.Membre;
+import EllaDanse.modeles.*;
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,8 +12,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
@@ -24,12 +30,6 @@ public class CtrlProfil {
 
     @FXML
     private Button ajouterInscriptionBtn;
-
-    @FXML
-    private TableColumn<?, ?> coursCol;
-
-    @FXML
-    private TableColumn<?, ?> dateInscriptionCol;
 
     @FXML
     private Label dateNaissanceLabel;
@@ -47,6 +47,15 @@ public class CtrlProfil {
     private TableColumn<?, ?> horaireCol;
 
     @FXML
+    private TableColumn<?, ?> professeurCol;
+
+    @FXML
+    private TableColumn<?, ?> coursCol;
+
+    @FXML
+    private TableColumn<?, ?> saisonCol;
+
+    @FXML
     private TableView<?> inscriptionsTable;
 
     @FXML
@@ -61,17 +70,15 @@ public class CtrlProfil {
     @FXML
     private Label prenomLabel;
 
-    @FXML
-    private TableColumn<?, ?> saisonCol;
 
-    @FXML
-    private TableColumn<?, ?> statutCol;
 
     @FXML
     private Button supprimerInscriptionBtn;
 
     @FXML
     private Label telephoneLabel;
+
+    private GestionnaireInscription toutesInscriptions;
 
     @FXML
     void ajouterInscription(ActionEvent event) {
@@ -100,6 +107,26 @@ public class CtrlProfil {
         dateNaissanceLabel.setText(m.getDateNaissance());
         emailLabel.setText(m.getEmail());
         telephoneLabel.setText(m.getTelephone());
+    }
+
+    public void initialize() {
+        saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
+        coursCol.setCellValueFactory(new PropertyValueFactory<>("Nomcours"));
+        horaireCol.setCellValueFactory(new PropertyValueFactory<>("horaire"));
+        professeurCol.setCellValueFactory(new PropertyValueFactory<>("professeur"));
+
+        toutesInscriptions = Donnees.getLesInscriptions();
+
+        // 2. Récupère la liste des inscriptions depuis l'objet GestionnaireInscription
+        List<Inscription> liste = toutesInscriptions.getInscriptions();           // ← extrait la liste
+
+        // 3. Affiche dans la TableView
+        inscriptionsTable.setItems(FXCollections.observableArrayList(liste));
+
+        supprimerInscriptionBtn.disableProperty().bind(Bindings.isNull(inscriptionsTable.getSelectionModel().selectedItemProperty()));
+
+
+
     }
 }
 

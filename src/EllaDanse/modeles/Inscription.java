@@ -14,11 +14,25 @@ public class Inscription {
         this.saison = saison;
     }
 
+
+
     public Membre getMembre() {
         return membre;
     }
 
-    public Cours getCours() {
-        return cours;
+    public String getSaison(){
+        return saison;
+    }
+
+    public String getCours() {
+        return cours.getNom();
+    }
+
+    public String getProfesseur() {
+        return cours.getProfesseur();
+    }
+
+    public String getHoraire() {
+        return cours.getHoraire();
     }
 }

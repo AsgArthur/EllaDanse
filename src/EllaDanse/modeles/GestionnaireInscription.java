@@ -11,6 +11,10 @@ public class GestionnaireInscription {
         inscriptions.add(new Inscription(membre, cours, saison));
     }
 
+    public List<Inscription> getInscriptions() {
+        return inscriptions;
+    }
+
     public List<Cours> getCoursDuMembre(Membre membre) {
         return inscriptions.stream()
                 .filter(i -> i.getMembre().equals(membre))

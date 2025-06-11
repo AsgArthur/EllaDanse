@@ -14,6 +14,9 @@ public class Donnees {
     // Liste des cours disponibles
     private static ObservableList<Cours> lesCours = FXCollections.observableArrayList();
 
+    //Liste des inscriptions de membres
+    private static GestionnaireInscription inscriptions = new GestionnaireInscription();
+
     // Compteur pour les IDs
     private static int prochainIdMembre = 1;
 
@@ -30,6 +33,8 @@ public class Donnees {
     public static ObservableList<Membre> getLesMembres() {
         return lesMembres;
     }
+
+    public static GestionnaireInscription getLesInscriptions(){return inscriptions;}
 
     /**
      * Retourne uniquement les membres du bureau
@@ -248,5 +253,18 @@ public class Donnees {
         ajouterMembre("Fournier", "Alexandre", 29, "1995-09-21", "alex.fournier@email.com", "0611121314", "2024-2025", "Jazz - Avancé", true);
         ajouterMembre("Lambert", "Camille", 23, "2001-10-02", "camille.lambert@email.com", "0612131415", "2024-2025", "Classique - Débutant", false);
 
+        inscriptions.ajouterInscription(lesMembres.get(0), lesCours.get(1), "2024-2025"); // Marie Dupont → Jazz Intermédiaire
+        inscriptions.ajouterInscription(lesMembres.get(1), lesCours.get(5), "2024-2025"); // Pierre Martin → Classique Avancé
+        inscriptions.ajouterInscription(lesMembres.get(1), lesCours.get(10), "2024-2025"); // Pierre Martin → Salsa
+        inscriptions.ajouterInscription(lesMembres.get(3), lesCours.get(9), "2024-2025"); // Jean Durand → Hip-Hop Intermédiaire
+        inscriptions.ajouterInscription(lesMembres.get(4), lesCours.get(0), "2024-2025"); // Emma Moreau → Jazz Débutant
+        inscriptions.ajouterInscription(lesMembres.get(5), lesCours.get(10), "2023-2024"); // Lucas Petit → Salsa
+        inscriptions.ajouterInscription(lesMembres.get(6), lesCours.get(4), "2024-2025"); // Chloé Roux → Classique Intermédiaire
+        inscriptions.ajouterInscription(lesMembres.get(6), lesCours.get(11), "2024-2025"); // Chloé Roux → Salsa
+        inscriptions.ajouterInscription(lesMembres.get(7), lesCours.get(8), "2024-2025"); // Thomas Lefevre → Hip-Hop Débutant
+        inscriptions.ajouterInscription(lesMembres.get(8), lesCours.get(10), "2023-2024"); // Ana Garcia → Salsa
+        inscriptions.ajouterInscription(lesMembres.get(9), lesCours.get(7), "2024-2025"); // Julie Dubois → Contemporain Intermédiaire
+        inscriptions.ajouterInscription(lesMembres.get(10), lesCours.get(2), "2024-2025"); // Alexandre Fournier → Jazz Avancé
+        inscriptions.ajouterInscription(lesMembres.get(11), lesCours.get(3), "2024-2025"); // Camille Lambert → Classique Débutant
     }
 }
