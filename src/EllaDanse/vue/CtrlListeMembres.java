@@ -1,45 +1,41 @@
 package EllaDanse.vue;
 
 import EllaDanse.controller.Main;
+import EllaDanse.modeles.Cours;
 import EllaDanse.modeles.Donnees;
-import EllaDanse.modeles.GestionnaireInscription;
 import EllaDanse.modeles.Inscription;
 import EllaDanse.modeles.Membre;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import javafx.scene.input.MouseEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class CtrlListeMembres {
 
-    @FXML private TableView<Membre> membresTable;
-    @FXML private TableColumn<Membre, Integer> idCol;
-    @FXML private TableColumn<Membre, String> nomCol;
-    @FXML private TableColumn<Membre, String> prenomCol;
-    @FXML private TableColumn<Membre, Integer> ageCol;
-    @FXML private TableColumn<Membre, String> emailCol;
-    @FXML private TableColumn<Membre, String> saisonCol;
-    @FXML private TableColumn<Membre, String> dateNaissanceCol;
-    @FXML private TableColumn<Membre, String> telephoneCol;
-
+    @FXML private TableView<Inscription> membresTable;  // Changé de Membre à Inscription
+    @FXML private TableColumn<Inscription, Integer> idCol;
+    @FXML private TableColumn<Inscription, String> nomCol;
+    @FXML private TableColumn<Inscription, String> prenomCol;
+    @FXML private TableColumn<Inscription, Integer> ageCol;
+    @FXML private TableColumn<Inscription, String> emailCol;
+    @FXML private TableColumn<Inscription, String> saisonCol;
+    @FXML private TableColumn<Inscription, String> dateNaissanceCol;
+    @FXML private TableColumn<Inscription, String> telephoneCol;
+    @FXML private TableColumn<Inscription, String> coursCol;
+    @FXML private TableColumn<Inscription, String> horaireCol;
+    @FXML private TableColumn<Inscription, String> professeurCol;
 
     @FXML private Label titreLabel;
     @FXML private Label totalMembresLabel;
@@ -51,67 +47,50 @@ public class CtrlListeMembres {
     @FXML private ComboBox<String> saisonComboBox;
     @FXML private ComboBox<String> triComboBox;
 
-    private ObservableList<Inscription> tousLesMembres;
-    private FilteredList<Inscription> membresFiltres;
-    private SortedList<Inscription> membresTries;
-
+    private ObservableList<Inscription> toutesLesInscriptions;
+    private FilteredList<Inscription> inscriptionsFiltrees;
+    private SortedList<Inscription> inscriptionsTriees;
 
     @FXML
     void ouvrirProfilMembre() {
-        Main.openProfil(membresTable.getSelectionModel().getSelectedItem());
+        Inscription inscriptionSelectionnee = membresTable.getSelectionModel().getSelectedItem();
+        if (inscriptionSelectionnee != null) {
+            Main.openProfil(inscriptionSelectionnee.getMembre());
+        }
     }
 
     @FXML
     public void supprimerMembre() {
-        Membre membreSelectionne = membresTable.getSelectionModel().getSelectedItem();
-        if (membreSelectionne != null) {
+        Inscription inscriptionSelectionnee = membresTable.getSelectionModel().getSelectedItem();
+        if (inscriptionSelectionnee != null) {
+            Membre membre = inscriptionSelectionnee.getMembre();
             Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
             confirmation.setTitle("Confirmation de suppression");
-            confirmation.setHeaderText("Supprimer le membre");
-            confirmation.setContentText("Êtes-vous sûr de vouloir supprimer " +
-                    membreSelectionne.getNom() + " " + membreSelectionne.getPrenom() + " ?\n\n" +
+            confirmation.setHeaderText("Supprimer l'inscription");
+            confirmation.setContentText("Êtes-vous sûr de vouloir supprimer l'inscription de " +
+                    membre.getNom() + " " + membre.getPrenom() + " au cours " +
+                    inscriptionSelectionnee.getCours() + " ?\n\n" +
                     "Cette action ne peut pas être annulée.");
 
             Optional<ButtonType> resultat = confirmation.showAndWait();
             if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
+                // Supprimer l'inscription
+                Donnees.suppInscription(membre, inscriptionSelectionnee.getVraiCours());
+                // Rafraîchir la vue
+                rafraichirVue();
 
-                if (Donnees.supprimerMembre(membreSelectionne)) {
-                    // 🔁 Rafraîchir toute la vue (table, filtre, compteur, tri)
-                    rafraichirVue();
-
-                    Alert info = new Alert(Alert.AlertType.INFORMATION);
-                    info.setTitle("Suppression réussie");
-                    info.setHeaderText(null);
-                    info.setContentText("Le membre " + membreSelectionne.getPrenom() + " " +
-                            membreSelectionne.getNom() + " a été supprimé avec succès.");
-                    info.showAndWait();
-                } else {
-                    afficherErreur("Erreur", "Impossible de supprimer le membre de la base de données.");
-                }
+                Alert info = new Alert(Alert.AlertType.INFORMATION);
+                info.setTitle("Suppression réussie");
+                info.setHeaderText(null);
+                info.setContentText("L'inscription a été supprimée avec succès.");
+                info.showAndWait();
             }
         }
     }
 
-
-
     @FXML
     public void toggleBureau() {
-        if (bureauToggle.isSelected()) {
-            titreLabel.setText("Liste des membres du bureau (" + Donnees.getNombreMembresBureau() + ")");
-            bureauToggle.setText("Voir membres normaux");
-            membresFiltres.setPredicate(inscription -> {
-                if (!inscription.getMembre().isMembreBureau()) return false;
-                return appliquerAutresFiltres(inscription.getMembre());
-            });
-        } else {
-            int nombresNormaux = Donnees.getNombreTotalMembres() - Donnees.getNombreMembresBureau();
-            titreLabel.setText("Liste des membres normaux (" + nombresNormaux + ")");
-            bureauToggle.setText("Voir membres bureau");
-            membresFiltres.setPredicate(inscription -> {
-                if (inscription.getMembre().isMembreBureau()) return false;
-                return appliquerAutresFiltres(inscription.getMembre());
-            });
-        }
+        appliquerFiltres();
         mettreAJourCompteur();
     }
 
@@ -134,42 +113,31 @@ public class CtrlListeMembres {
 
         switch (tri) {
             case "Ordre alphabétique et saison":
-                comparator = Comparator.comparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER)
+                comparator = Comparator.comparing((Inscription i) -> i.getMembre().getNom(), String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(i -> i.getMembre().getPrenom(), String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(Inscription::getSaison);
                 break;
 
             case "Saison et ordre alphabétique":
                 comparator = Comparator.comparing(Inscription::getSaison)
-                        .thenComparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER);
+                        .thenComparing((Inscription i) -> i.getMembre().getNom(), String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(i -> i.getMembre().getPrenom(), String.CASE_INSENSITIVE_ORDER);
                 break;
 
-            case "Saison, cours et ordre alphabétique":
-                comparator = Comparator.comparing(Inscription::getPrenom)
-                        .thenComparing(Inscription::getCours)
-                        .thenComparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER);
-                break;
-
-            case "Saison, ordre alphabétique et cour":
-                comparator = Comparator.comparing(Inscription::getSaison)
-                        .thenComparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Inscription::getCours);
+            case "Cours et ordre alphabétique":
+                comparator = Comparator.comparing(Inscription::getCours)
+                        .thenComparing((Inscription i) -> i.getMembre().getNom(), String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(i -> i.getMembre().getPrenom(), String.CASE_INSENSITIVE_ORDER);
                 break;
 
             default:
-                comparator = Comparator.comparing(Inscription::getNom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Inscription::getPrenom, String.CASE_INSENSITIVE_ORDER);
+                comparator = Comparator.comparing((Inscription i) -> i.getMembre().getNom(), String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(i -> i.getMembre().getPrenom(), String.CASE_INSENSITIVE_ORDER);
                 break;
         }
 
-        membresTries.setComparator(comparator);
-        membresTable.setItems(membresTries); // Réaffecter au cas où
+        inscriptionsTriees.setComparator(comparator);
     }
-
-
 
     @FXML
     public void gererDoubleClic() {
@@ -179,133 +147,170 @@ public class CtrlListeMembres {
     }
 
     public void initialize() {
-        // Configuration des colonnes
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        prenomCol.setCellValueFactory(new PropertyValueFactory<>("prenom"));
-        ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-        saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
-        dateNaissanceCol.setCellValueFactory(new PropertyValueFactory<>("dateNaissance"));
-        telephoneCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        // Configuration des colonnes pour afficher les données du membre via l'inscription
+        idCol.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getMembre().getId()).asObject());
 
-        // Style conditionnel sur les lignes
+        nomCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMembre().getNom()));
+
+        prenomCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMembre().getPrenom()));
+
+        ageCol.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getMembre().getAge()).asObject());
+
+        emailCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMembre().getEmail()));
+
+        saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
+
+        dateNaissanceCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMembre().getDateNaissance()));
+
+        telephoneCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMembre().getTelephone()));
+
+        // Configuration des colonnes spécifiques aux cours
+        if (coursCol != null) {
+            coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
+        }
+        if (horaireCol != null) {
+            horaireCol.setCellValueFactory(new PropertyValueFactory<>("horaire"));
+        }
+        if (professeurCol != null) {
+            professeurCol.setCellValueFactory(new PropertyValueFactory<>("professeur"));
+        }
+
+        // Style conditionnel sur les lignes pour les membres du bureau
         membresTable.setRowFactory(tv -> {
-            TableRow<Membre> row = new TableRow<>();
+            TableRow<Inscription> row = new TableRow<>();
             row.itemProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal != null && newVal.isMembreBureau()) {
+                if (newVal != null && newVal.getMembre().isMembreBureau()) {
                     row.setStyle("-fx-background-color: #e3f2fd; -fx-font-weight: bold;");
                 } else {
                     row.setStyle("");
                 }
             });
-
-            membresTable.setOnMouseClicked((MouseEvent e) -> {
-                if (( e.getClickCount()==2)
-                        && (e.getButton()==MouseButton.PRIMARY)
-                        && (e.getTarget() instanceof Text)) {
-                    Main.openProfil(membresTable.getSelectionModel().getSelectedItem());
-                }
-            });
-
             return row;
         });
-        // Données de base
-        GestionnaireInscription toutesInscriptions = Donnees.getLesInscriptions();
-        List<Inscription> liste = toutesInscriptions.getInscriptions();           // ← extrait la liste
-        List<Inscription> listeCoursMembre = new ArrayList<>();
-        tousLesMembres = toutesInscriptions;
-        membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
-        membresTries = new SortedList<>(membresFiltres);
 
-        // Ne pas binder au comparatorProperty() du TableView ! (pour garder le tri personnalisé)
-        // membresTries.comparatorProperty().bind(membresTable.comparatorProperty());
+        // Gestion du double-clic
+        membresTable.setOnMouseClicked((MouseEvent e) -> {
+            if ((e.getClickCount() == 2) && (e.getButton() == MouseButton.PRIMARY) && (e.getTarget() instanceof Text)) {
+                Inscription inscription = membresTable.getSelectionModel().getSelectedItem();
+                if (inscription != null) {
+                    Main.openProfil(inscription.getMembre());
+                }
+            }
+        });
 
-        membresTable.setItems(membresTries);
+        // Chargement des données
+        chargerInscriptions();
 
         // Configuration des comboBox
         configurerComboBoxes();
 
-        // Désactivation des boutons si aucun membre sélectionné
+        // Désactivation des boutons si aucune inscription sélectionnée
         profilBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
         supprimerBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
 
         // Titre de départ
-        titreLabel.setText("Liste de tous les membres (" + Donnees.getNombreTotalMembres() + ")");
-        bureauToggle.setText("Voir membres bureau");
+        mettreAJourTitre();
 
         // Appliquer filtres + tri par défaut
         appliquerFiltres();
-        changerTri(); // très important pour appliquer le tri alphabétique dès le lancement
+        changerTri();
     }
 
+    private void chargerInscriptions() {
+        // Récupérer toutes les inscriptions
+        List<Inscription> inscriptions = Donnees.getLesInscriptions().getInscriptions();
+
+        // Créer aussi des "inscriptions vides" pour les membres sans cours
+        List<Inscription> toutesInscriptions = new ArrayList<>(inscriptions);
+
+        // Ajouter les membres sans inscription
+        for (Membre membre : Donnees.getLesMembres()) {
+            boolean aDesInscriptions = inscriptions.stream()
+                    .anyMatch(i -> i.getMembre().equalsTo(membre));
+
+            if (!aDesInscriptions) {
+                // Créer une inscription "vide" pour ce membre
+                toutesInscriptions.add(new InscriptionVide(membre));
+            }
+        }
+
+        toutesLesInscriptions = FXCollections.observableArrayList(toutesInscriptions);
+        inscriptionsFiltrees = new FilteredList<>(toutesLesInscriptions, p -> true);
+        inscriptionsTriees = new SortedList<>(inscriptionsFiltrees);
+        membresTable.setItems(inscriptionsTriees);
+    }
 
     private void configurerComboBoxes() {
         // Options de tri disponibles
         triComboBox.getItems().setAll(
                 "Ordre alphabétique et saison",
                 "Saison et ordre alphabétique",
-                "Saison, cours et ordre alphabétique",
-                "Saison, ordre alphabétique et cour"
+                "Cours et ordre alphabétique"
         );
         triComboBox.setValue("Ordre alphabétique et saison");
 
         // Remplissage des saisons disponibles
         saisonComboBox.getItems().clear();
         saisonComboBox.getItems().add("Toutes");
-
         List<String> saisons = Donnees.getLesSaisons();
         saisonComboBox.getItems().addAll(saisons);
         saisonComboBox.setValue("Toutes");
     }
 
-
-
-    // ===== NOUVELLES MÉTHODES POUR OUVRIR LES FENÊTRES =====
-
-    private void ouvrirFenetreProfil(Membre membre) throws IOException {
-        Main.openProfil(membre);
-    }
-
     private void appliquerFiltres() {
-        membresFiltres.setPredicate(membre -> {
-            // Filtre bureau (si le toggle n'est pas sélectionné, on affiche tous)
+        inscriptionsFiltrees.setPredicate(inscription -> {
+            Membre membre = inscription.getMembre();
+
+            // Filtre bureau
             if (bureauToggle.isSelected()) {
-                // Mode bureau seulement
                 if (!membre.isMembreBureau()) return false;
+            } else {
+                if (membre.isMembreBureau()) return false;
             }
 
-            return appliquerAutresFiltres(membre);
+            // Filtre saison
+            String saisonSelectionnee = saisonComboBox.getValue();
+            if (saisonSelectionnee != null && !saisonSelectionnee.equals("Toutes")
+                    && !inscription.getSaison().equals(saisonSelectionnee)) {
+                return false;
+            }
+
+            // Filtre recherche
+            String recherche = rechercheField.getText();
+            if (recherche == null || recherche.isEmpty()) {
+                return true;
+            }
+
+            String rechercheLower = recherche.toLowerCase();
+            return membre.getNom().toLowerCase().contains(rechercheLower)
+                    || membre.getPrenom().toLowerCase().contains(rechercheLower)
+                    || membre.getEmail().toLowerCase().contains(rechercheLower)
+                    || inscription.getCours().toLowerCase().contains(rechercheLower)
+                    || inscription.getProfesseur().toLowerCase().contains(rechercheLower);
         });
 
         mettreAJourCompteur();
     }
 
-    private boolean appliquerAutresFiltres(Membre membre) {
-        // Filtre saison
-        String saisonSelectionnee = saisonComboBox.getValue();
-        if (saisonSelectionnee != null && !saisonSelectionnee.equals("Toutes")
-                && !membre.getSaison().equals(saisonSelectionnee)) {
-            return false;
+    private void mettreAJourTitre() {
+        if (bureauToggle.isSelected()) {
+            titreLabel.setText("Inscriptions des membres du bureau");
+        } else {
+            titreLabel.setText("Toutes les inscriptions");
         }
-
-        // Filtre recherche
-        String recherche = rechercheField.getText();
-        if (recherche == null || recherche.isEmpty()) {
-            return true;
-        }
-
-        String rechercheLower = recherche.toLowerCase();
-        return membre.getNom().toLowerCase().contains(rechercheLower)
-                || membre.getPrenom().toLowerCase().contains(rechercheLower)
-                || membre.getEmail().toLowerCase().contains(rechercheLower)
-                || membre.getCours().toLowerCase().contains(rechercheLower);
     }
 
     private void mettreAJourCompteur() {
-        int total = membresFiltres.size();
-        String typeAffichage = bureauToggle.isSelected() ? "membre(s) du bureau" : "membre(s)";
-        totalMembresLabel.setText("Affichés : " + total + " " + typeAffichage);
+        int total = inscriptionsFiltrees.size();
+        totalMembresLabel.setText("Affichées : " + total + " inscription(s)");
+        mettreAJourTitre();
     }
 
     private void afficherErreur(String titre, String message) {
@@ -316,68 +321,35 @@ public class CtrlListeMembres {
         alert.showAndWait();
     }
 
-    // ===== MÉTHODES PUBLIQUES POUR L'INTÉGRATION =====
-
-    public void ajouterMembre(Membre nouveauMembre) {
-        // Le membre est déjà ajouté dans Donnees, on refresh juste la vue
-        membresTable.refresh();
-        appliquerFiltres();
-
-        // Mettre à jour le titre avec le nouveau total
-        titreLabel.setText("Liste de tous les membres (" + Donnees.getNombreTotalMembres() + ")");
-    }
-
-    public ObservableList<Membre> getTousLesMembres() {
-        return tousLesMembres;
-    }
-
     public void rafraichirVue() {
-        // Recharger les données depuis Donnees
-        tousLesMembres = Donnees.getLesMembres();
-        membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
-        membresTries = new SortedList<>(membresFiltres);
-        membresTries.comparatorProperty().bind(membresTable.comparatorProperty());
-        membresTable.setItems(membresTries);
-
-        // Reconfigurer les ComboBoxes au cas où de nouvelles saisons auraient été ajoutées
+        chargerInscriptions();
         configurerComboBoxes();
-
-        // Réappliquer les filtres
         appliquerFiltres();
-
-        // Mettre à jour le titre
-        titreLabel.setText("Liste de tous les membres (" + Donnees.getNombreTotalMembres() + ")");
+        mettreAJourCompteur();
     }
 
     @FXML
-    private TableView<Membre> tableMembres;
+    private TableView<Inscription> tableMembres;
 
     @FXML
     private void gererClicSurTable(MouseEvent event) {
-        Membre membre = tableMembres.getSelectionModel().getSelectedItem();
+        Inscription inscription = tableMembres.getSelectionModel().getSelectedItem();
 
-        if (membre == null) return;
+        if (inscription == null) return;
 
         if (event.getClickCount() == 2 && event.isPrimaryButtonDown()) {
-            // Double-clic gauche → ouvrir le profil
-            Main.openProfil(membre);
-        } else if (event.getClickCount() == 1 && event.isPrimaryButtonDown()) {
-            // Simple clic gauche → action par défaut (sélection, affichage, etc.)
-            selectionnerMembre(membre);
+            Main.openProfil(inscription.getMembre());
         }
     }
-
-    private void selectionnerMembre(Membre membre) {
-    }
-
 
     public void fermerPage(ActionEvent actionEvent) {
         Main.closeListeMembre();
     }
 
-    public Membre membreClique(){
-        Membre membreClique = tableMembres.getSelectionModel().getSelectedItem();
-        return membreClique;
+    // Classe interne pour représenter un membre sans inscription
+    private static class InscriptionVide extends Inscription {
+        public InscriptionVide(Membre membre) {
+            super(membre, null);
+        }
     }
-
 }
