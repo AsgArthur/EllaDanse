@@ -37,7 +37,7 @@ public class Main extends Application{
         fListeMembres.show();
     }
 
-    static private void closeListeMembre(){
+    static public void closeListeMembre(){
         fListeMembres.close();
         fAccueil.show();
     }
@@ -57,7 +57,7 @@ public class Main extends Application{
     }
 
 
-    static public void main(String args[]) {
+    static public void main(String[] args) {
         Application.launch(args);
     }
 }

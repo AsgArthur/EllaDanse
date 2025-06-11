@@ -1,5 +1,6 @@
 package EllaDanse.vue;
 
+import EllaDanse.controller.Main;
 import EllaDanse.modeles.Donnees;
 import EllaDanse.modeles.Membre;
 import javafx.beans.binding.Bindings;
@@ -7,9 +8,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,7 +36,6 @@ public class CtrlListeMembres {
     @FXML private Label titreLabel;
     @FXML private Label totalMembresLabel;
     @FXML private ToggleButton bureauToggle;
-    @FXML private Button modifierBtn;
     @FXML private Button profilBtn;
     @FXML private Button supprimerBtn;
     @FXML private TextField rechercheField;
@@ -42,16 +50,17 @@ public class CtrlListeMembres {
     public void modifierMembre() {
         Membre membreSelectionne = membresTable.getSelectionModel().getSelectedItem();
         if (membreSelectionne != null) {
-            // TODO: Appeler Main.ouvrirModifierMembre(membreSelectionne);
+            try {
+                // Ouvrir la fenêtre de modification
+                ouvrirFenetreProfil(membreSelectionne);
 
-            // Pour l'instant, affichons juste une alerte
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Modification");
-            alert.setHeaderText("Modification de membre");
-            alert.setContentText("Modification de : " + membreSelectionne.getNom() + " " + membreSelectionne.getPrenom());
-            alert.showAndWait();
+                // Rafraîchir la table après modification
+                membresTable.refresh();
+                appliquerFiltres();
 
-            membresTable.refresh();
+            } catch (IOException e) {
+                afficherErreur("Erreur", "Impossible d'ouvrir la fenêtre de modification : " + e.getMessage());
+            }
         }
     }
 
@@ -59,14 +68,17 @@ public class CtrlListeMembres {
     public void ouvrirProfilMembre() {
         Membre membreSelectionne = membresTable.getSelectionModel().getSelectedItem();
         if (membreSelectionne != null) {
-            // TODO: Appeler Main.ouvrirProfilMembre(membreSelectionne);
+            try {
+                // Ouvrir la fenêtre de profil
+                ouvrirFenetreProfil(membreSelectionne);
 
-            // Pour l'instant, affichons juste une alerte
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Profil");
-            alert.setHeaderText("Profil du membre");
-            alert.setContentText("Profil de : " + membreSelectionne.getNom() + " " + membreSelectionne.getPrenom());
-            alert.showAndWait();
+                // Rafraîchir la table au retour
+                membresTable.refresh();
+                appliquerFiltres();
+
+            } catch (IOException e) {
+                afficherErreur("Erreur", "Impossible d'ouvrir la fenêtre de profil : " + e.getMessage());
+            }
         }
     }
 
@@ -78,18 +90,28 @@ public class CtrlListeMembres {
             confirmation.setTitle("Confirmation de suppression");
             confirmation.setHeaderText("Supprimer le membre");
             confirmation.setContentText("Êtes-vous sûr de vouloir supprimer " +
-                    membreSelectionne.getNom() + " " + membreSelectionne.getPrenom() + " ?");
+                    membreSelectionne.getNom() + " " + membreSelectionne.getPrenom() + " ?\n\n" +
+                    "Cette action ne peut pas être annulée.");
 
             Optional<ButtonType> resultat = confirmation.showAndWait();
             if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
+                // Supprimer de la liste locale ET de la classe Donnees
                 tousLesMembres.remove(membreSelectionne);
-                Donnees.supprimerMembre(membreSelectionne);
+                boolean supprime = Donnees.supprimerMembre(membreSelectionne);
 
-                Alert info = new Alert(Alert.AlertType.INFORMATION);
-                info.setTitle("Suppression réussie");
-                info.setHeaderText(null);
-                info.setContentText("Le membre a été supprimé avec succès.");
-                info.showAndWait();
+                if (supprime) {
+                    Alert info = new Alert(Alert.AlertType.INFORMATION);
+                    info.setTitle("Suppression réussie");
+                    info.setHeaderText(null);
+                    info.setContentText("Le membre " + membreSelectionne.getPrenom() + " " +
+                            membreSelectionne.getNom() + " a été supprimé avec succès.");
+                    info.showAndWait();
+
+                    // Mettre à jour le compteur
+                    mettreAJourCompteur();
+                } else {
+                    afficherErreur("Erreur", "Impossible de supprimer le membre de la base de données.");
+                }
             }
         }
     }
@@ -97,13 +119,16 @@ public class CtrlListeMembres {
     @FXML
     public void toggleBureau() {
         if (bureauToggle.isSelected()) {
-            titreLabel.setText("Liste des membres du bureau");
+            titreLabel.setText("Liste des membres du bureau (" + Donnees.getNombreMembresBureau() + ")");
+            bureauToggle.setText("Voir membres normaux");
             membresFiltres.setPredicate(membre -> {
                 if (!membre.isMembreBureau()) return false;
                 return appliquerAutresFiltres(membre);
             });
         } else {
-            titreLabel.setText("Liste des membres");
+            int nombresNormaux = Donnees.getNombreTotalMembres() - Donnees.getNombreMembresBureau();
+            titreLabel.setText("Liste des membres normaux (" + nombresNormaux + ")");
+            bureauToggle.setText("Voir membres bureau");
             membresFiltres.setPredicate(membre -> {
                 if (membre.isMembreBureau()) return false;
                 return appliquerAutresFiltres(membre);
@@ -173,7 +198,20 @@ public class CtrlListeMembres {
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
         coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
 
-        // Récupérer les données depuis Donnees
+        // Style pour différencier les membres du bureau
+        membresTable.setRowFactory(tv -> {
+            TableRow<Membre> row = new TableRow<>();
+            row.itemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null && newValue.isMembreBureau()) {
+                    row.setStyle("-fx-background-color: #e3f2fd; -fx-font-weight: bold;");
+                } else {
+                    row.setStyle("");
+                }
+            });
+            return row;
+        });
+
+
         tousLesMembres = Donnees.getLesMembres();
 
         // Configurer les listes filtrées et triées
@@ -183,6 +221,21 @@ public class CtrlListeMembres {
         membresTable.setItems(membresTries);
 
         // Remplir les ComboBox
+        configurerComboBoxes();
+
+        // Désactiver les boutons si aucune sélection
+        profilBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
+        supprimerBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
+
+        // Configuration initiale
+        titreLabel.setText("Liste de tous les membres (" + Donnees.getNombreTotalMembres() + ")");
+        bureauToggle.setText("Voir membres bureau");
+
+        // Appliquer les filtres initiaux
+        appliquerFiltres();
+    }
+
+    private void configurerComboBoxes() {
         // Options de tri
         triComboBox.getItems().clear();
         triComboBox.getItems().addAll(
@@ -199,36 +252,20 @@ public class CtrlListeMembres {
         saisonComboBox.getItems().add("Toutes");
         saisonComboBox.getItems().addAll(saisons);
         saisonComboBox.setValue("Toutes");
-
-        // Désactiver les boutons si aucune sélection
-        profilBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
-        modifierBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
-        supprimerBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
-
-        // Appliquer les filtres initiaux
-        appliquerFiltres();
     }
 
-    private void initialiserDonnees() {
-        // TODO: Récupérer les données depuis votre classe Donnees
-        // Pour l'instant, données de test
-        tousLesMembres.add(new Membre(1, "Dupont", "Marie", 25, "marie.dupont@email.com", "2024-2025", "Jazz - Intermédiaire", false));
-        tousLesMembres.add(new Membre(2, "Martin", "Pierre", 30, "pierre.martin@email.com", "2024-2025", "Classique - Avancé", true));
-        tousLesMembres.add(new Membre(3, "Bernard", "Sophie", 22, "sophie.bernard@email.com", "2023-2024", "Contemporain - Débutant", false));
-        tousLesMembres.add(new Membre(4, "Durand", "Jean", 28, "jean.durand@email.com", "2024-2025", "Hip-Hop - Intermédiaire", true));
-        tousLesMembres.add(new Membre(5, "Moreau", "Emma", 19, "emma.moreau@email.com", "2024-2025", "Jazz - Débutant", false));
-        tousLesMembres.add(new Membre(6, "Petit", "Lucas", 35, "lucas.petit@email.com", "2023-2024", "Salsa - Avancé", false));
-        tousLesMembres.add(new Membre(7, "Roux", "Chloé", 27, "chloe.roux@email.com", "2024-2025", "Classique - Intermédiaire", true));
+    // ===== NOUVELLES MÉTHODES POUR OUVRIR LES FENÊTRES =====
+
+    private void ouvrirFenetreProfil(Membre membre) throws IOException {
+        Main.openProfil();
     }
 
     private void appliquerFiltres() {
         membresFiltres.setPredicate(membre -> {
-            // Filtre bureau
-            boolean afficherBureau = bureauToggle.isSelected();
-            if (afficherBureau && !membre.isMembreBureau()) {
-                return false;
-            } else if (!afficherBureau && membre.isMembreBureau()) {
-                return false;
+            // Filtre bureau (si le toggle n'est pas sélectionné, on affiche tous)
+            if (bureauToggle.isSelected()) {
+                // Mode bureau seulement
+                if (!membre.isMembreBureau()) return false;
             }
 
             return appliquerAutresFiltres(membre);
@@ -254,20 +291,58 @@ public class CtrlListeMembres {
         String rechercheLower = recherche.toLowerCase();
         return membre.getNom().toLowerCase().contains(rechercheLower)
                 || membre.getPrenom().toLowerCase().contains(rechercheLower)
-                || membre.getEmail().toLowerCase().contains(rechercheLower);
+                || membre.getEmail().toLowerCase().contains(rechercheLower)
+                || membre.getCours().toLowerCase().contains(rechercheLower);
     }
 
     private void mettreAJourCompteur() {
         int total = membresFiltres.size();
-        totalMembresLabel.setText("Total : " + total + " membre(s)");
+        String typeAffichage = bureauToggle.isSelected() ? "membre(s) du bureau" : "membre(s)";
+        totalMembresLabel.setText("Affichés : " + total + " " + typeAffichage);
     }
 
+    private void afficherErreur(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    // ===== MÉTHODES PUBLIQUES POUR L'INTÉGRATION =====
+
     public void ajouterMembre(Membre nouveauMembre) {
-        tousLesMembres.add(nouveauMembre);
+        // Le membre est déjà ajouté dans Donnees, on refresh juste la vue
+        membresTable.refresh();
         appliquerFiltres();
+
+        // Mettre à jour le titre avec le nouveau total
+        titreLabel.setText("Liste de tous les membres (" + Donnees.getNombreTotalMembres() + ")");
     }
 
     public ObservableList<Membre> getTousLesMembres() {
         return tousLesMembres;
+    }
+
+    public void rafraichirVue() {
+        // Recharger les données depuis Donnees
+        tousLesMembres = Donnees.getLesMembres();
+        membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
+        membresTries = new SortedList<>(membresFiltres);
+        membresTries.comparatorProperty().bind(membresTable.comparatorProperty());
+        membresTable.setItems(membresTries);
+
+        // Reconfigurer les ComboBoxes au cas où de nouvelles saisons auraient été ajoutées
+        configurerComboBoxes();
+
+        // Réappliquer les filtres
+        appliquerFiltres();
+
+        // Mettre à jour le titre
+        titreLabel.setText("Liste de tous les membres (" + Donnees.getNombreTotalMembres() + ")");
+    }
+
+    public void fermerPage(ActionEvent actionEvent) {
+        Main.closeListeMembre();
     }
 }

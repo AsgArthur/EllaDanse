@@ -41,7 +41,7 @@ public class CtrlAccueil {
 
     @FXML
     void ouvrirListeMembres(ActionEvent event) {
-        Main.openInscription();
+        Main.openListeMembre();
     }
 
     @FXML
