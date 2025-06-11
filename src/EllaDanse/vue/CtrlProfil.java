@@ -42,7 +42,7 @@ public class CtrlProfil {
     private Button fermerBtn;
 
     @FXML
-    private ComboBox<?> filtreSaisonComboBox;
+    private ComboBox<String> filtreSaisonComboBox;
 
     @FXML
     private TableColumn<Inscription, String> horaireCol;
@@ -99,6 +99,15 @@ public class CtrlProfil {
 
     }
 
+    private void configurerComboBoxes() {
+        // Options de tri disponibles
+        List<String> saisons = Donnees.getLesSaisons();
+        filtreSaisonComboBox.getItems().clear();
+        filtreSaisonComboBox.getItems().add("Toutes");
+        filtreSaisonComboBox.getItems().addAll(saisons);
+        filtreSaisonComboBox.setValue("Toutes");
+    }
+
     public void afficherMembre(Membre m) {
         nomLabel.setText(m.getNom());
         prenomLabel.setText(m.getPrenom());
@@ -132,10 +141,7 @@ public class CtrlProfil {
         horaireCol.setCellValueFactory(new PropertyValueFactory<>("horaire"));
         professeurCol.setCellValueFactory(new PropertyValueFactory<>("professeur"));
 
-
-
-
-
+        configurerComboBoxes();
     }
 }
 
