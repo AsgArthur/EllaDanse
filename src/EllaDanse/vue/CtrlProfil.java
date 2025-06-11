@@ -94,9 +94,10 @@ public class CtrlProfil {
     }
 
     public void afficherMembre(Membre m) {
-        nomLabel.setText(""+m.getNom());
+        nomLabel.setText(m.getNom());
         prenomLabel.setText(m.getPrenom());
         ageLabel.setText(Integer.toString(m.getAge()));
+        dateNaissanceLabel.setText(m.getDateNaissance());
         emailLabel.setText(m.getEmail());
         telephoneLabel.setText(m.getTelephone());
     }

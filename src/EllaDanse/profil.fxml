@@ -63,9 +63,6 @@
 
                         <Label style="-fx-font-weight: bold;" text="Téléphone :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                         <Label fx:id="telephoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-
-                        <Label style="-fx-font-weight: bold;" text="Membre depuis :" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                        <Label fx:id="membreDepuisLabel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <rowConstraints>
                      <RowConstraints />
                      <RowConstraints />

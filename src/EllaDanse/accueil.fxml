@@ -35,14 +35,6 @@
                 <Button fx:id="listeMembresBtn" onAction="#ouvrirListeMembres" prefHeight="60" prefWidth="180" style="-fx-background-color: #2196f3; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px;" text="👥 Liste des membres" />
             </HBox>
 
-            <!-- Deuxième ligne de boutons -->
-            <HBox alignment="CENTER" spacing="20">
-                <Button fx:id="profilBtn" onAction="#ouvrirProfil" prefHeight="60" prefWidth="180" style="-fx-background-color: #9c27b0; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 8px;" text="👤 Profil membre" />
-            </HBox>
-
-            <!-- Troisième ligne de boutons -->
-            <HBox alignment="CENTER" spacing="20" />
-
         </VBox>
     </center>
 
