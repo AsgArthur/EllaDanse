@@ -92,10 +92,9 @@
                     <TableView fx:id="inscriptionsTable" prefHeight="200">
                         <columns>
                             <TableColumn fx:id="saisonCol" prefWidth="100" text="Saison" />
-                            <TableColumn fx:id="coursCol" prefWidth="120" text="Cours" />
-                            <TableColumn fx:id="horaireCol" prefWidth="140" text="Horaire" />
-                            <TableColumn fx:id="dateInscriptionCol" prefWidth="100" text="Date inscription" />
-                            <TableColumn fx:id="statutCol" prefWidth="80" text="Statut" />
+                            <TableColumn fx:id="coursCol" prefWidth="175.99998474121094" text="Cours" />
+                            <TableColumn fx:id="horaireCol" prefWidth="115.33331298828125" text="Horaire" />
+                            <TableColumn fx:id="professeurCol" prefWidth="136.0001220703125" text="Professeur" />
                         </columns>
                         <placeholder>
                             <Label text="Aucune inscription trouvée" />

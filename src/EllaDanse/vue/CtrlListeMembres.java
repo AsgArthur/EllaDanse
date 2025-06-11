@@ -17,6 +17,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import javafx.scene.input.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -203,6 +205,7 @@ public class CtrlListeMembres {
 
         // Appliquer les filtres initiaux
         appliquerFiltres();
+
     }
 
     private void configurerComboBoxes() {

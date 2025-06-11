@@ -237,7 +237,7 @@ public class Donnees {
         // Ajout des membres
         ajouterMembre("Dupont", "Marie", 25, "1999-06-12", "marie.dupont@email.com", "0601020304", "2024-2025", "Jazz - Intermédiaire", false);
         ajouterMembre("Martin", "Pierre", 30, "1994-01-22", "pierre.martin@email.com", "0602030405", "2024-2025", "Classique - Avancé", true);
-        ajouterMembre("Bernard", "Sophie", 22, "2002-03-18", "sophie.bernard@email.com", "0603040506", "2023-2024", "Contemporain - Débutant", false);
+        ajouterMembre("Bernard", "Sophie", 22, "2002-03-18", "sophie.bernard@email.com", "0603040506", "2023-2024", "", false);
         ajouterMembre("Durand", "Jean", 28, "1996-07-05", "jean.durand@email.com", "0604050607", "2024-2025", "Hip-Hop - Intermédiaire", true);
         ajouterMembre("Moreau", "Emma", 19, "2005-11-09", "emma.moreau@email.com", "0605060708", "2024-2025", "Jazz - Débutant", false);
         ajouterMembre("Petit", "Lucas", 35, "1989-02-25", "lucas.petit@email.com", "0606070809", "2023-2024", "Salsa - Tous niveaux", false);

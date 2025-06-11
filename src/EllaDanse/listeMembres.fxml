@@ -1,66 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="EllaDanse.vue.CtrlListeMembres">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EllaDanse.vue.CtrlListeMembres">
 
     <top>
         <VBox spacing="10">
             <padding>
-                <Insets top="15" right="15" bottom="10" left="15"/>
+                <Insets bottom="10" left="15" right="15" top="15" />
             </padding>
 
             <HBox alignment="CENTER_LEFT" spacing="20">
-                <Label fx:id="titreLabel" text="Liste des membres" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-                <ToggleButton fx:id="bureauToggle" text="Membres du bureau"
-                              style="-fx-background-color: #673ab7; -fx-text-fill: white;"
-                              onAction="#toggleBureau"/>
+                <Label fx:id="titreLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Liste des membres" />
+                <ToggleButton fx:id="bureauToggle" onAction="#toggleBureau" style="-fx-background-color: #673ab7; -fx-text-fill: white;" text="Membres du bureau" />
             </HBox>
 
             <!-- Filtres et contrôles -->
-            <HBox spacing="15" alignment="CENTER_LEFT">
-                <Label text="Saison :"/>
-                <ComboBox fx:id="saisonComboBox" prefWidth="130" onAction="#filtrerParSaison"/>
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="Saison :" />
+                <ComboBox fx:id="saisonComboBox" onAction="#filtrerParSaison" prefWidth="130" />
 
-                <Separator orientation="VERTICAL"/>
+                <Separator orientation="VERTICAL" />
 
-                <Label text="Tri :"/>
-                <ComboBox fx:id="triComboBox" prefWidth="200" onAction="#changerTri"/>
+                <Label text="Tri :" />
+                <ComboBox fx:id="triComboBox" onAction="#changerTri" prefWidth="200" />
 
-                <Separator orientation="VERTICAL"/>
+                <Separator orientation="VERTICAL" />
 
-                <Label text="Recherche :"/>
-                <TextField fx:id="rechercheField" promptText="Nom, prénom, email..." prefWidth="200" onKeyReleased="#filtrerParRecherche"/>
+                <Label text="Recherche :" />
+                <TextField fx:id="rechercheField" onKeyReleased="#filtrerParRecherche" prefWidth="200" promptText="Nom, prénom, email..." />
 
-                <Region HBox.hgrow="ALWAYS"/>
+                <Region HBox.hgrow="ALWAYS" />
 
-                <Label fx:id="totalMembresLabel" text="Total : 0 membre(s)"
-                       style="-fx-font-weight: bold; -fx-text-fill: #666666;"/>
+                <Label fx:id="totalMembresLabel" style="-fx-font-weight: bold; -fx-text-fill: #666666;" text="Total : 0 membre(s)" />
             </HBox>
 
-            <Separator/>
+            <Separator />
         </VBox>
     </top>
 
     <center>
-        <TableView fx:id="membresTable" prefHeight="400" onMouseClicked="#gererDoubleClic">
+        <TableView fx:id="membresTable" onMouseClicked="#gererDoubleClic" prefHeight="400" prefWidth="903.0">
             <columns>
-                <TableColumn fx:id="idCol" text="N°" prefWidth="50" minWidth="50" maxWidth="60"/>
-                <TableColumn fx:id="nomCol" text="Nom" prefWidth="120" minWidth="100"/>
-                <TableColumn fx:id="prenomCol" text="Prénom" prefWidth="120" minWidth="100"/>
-                <TableColumn fx:id="ageCol" text="Âge" prefWidth="60" minWidth="50" maxWidth="80"/>
-                <TableColumn fx:id="emailCol" text="Email" prefWidth="180" minWidth="150"/>
-                <TableColumn fx:id="saisonCol" text="Saison" prefWidth="100" minWidth="80"/>
-                <TableColumn fx:id="coursCol" text="Cours" prefWidth="200" minWidth="150"/>
+                <TableColumn fx:id="idCol" maxWidth="62.0" minWidth="50" prefWidth="62.0" text="N°" />
+                <TableColumn fx:id="nomCol" minWidth="100" prefWidth="137.33334350585938" text="Nom" />
+                <TableColumn fx:id="prenomCol" minWidth="100" prefWidth="172.00006103515625" text="Prénom" />
+                <TableColumn fx:id="ageCol" maxWidth="342.0" minWidth="50" prefWidth="116.00006103515625" text="Âge" />
+                <TableColumn fx:id="emailCol" minWidth="150" prefWidth="308.0" text="Email" />
+                <TableColumn fx:id="saisonCol" minWidth="80" prefWidth="138.0" text="Saison" />
             </columns>
             <placeholder>
                 <VBox alignment="CENTER" spacing="10">
-                    <Label text="👥 Aucun membre trouvé" style="-fx-font-size: 16px; -fx-text-fill: #999999;"/>
-                    <Label text="Utilisez les filtres ou ajoutez de nouveaux membres" style="-fx-font-size: 12px; -fx-text-fill: #999999;"/>
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #999999;" text="👥 Aucun membre trouvé" />
+                    <Label style="-fx-font-size: 12px; -fx-text-fill: #999999;" text="Utilisez les filtres ou ajoutez de nouveaux membres" />
                 </VBox>
             </placeholder>
         </TableView>
@@ -68,23 +72,19 @@
 
     <bottom>
         <VBox spacing="5">
-            <Separator/>
-            <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Separator />
+            <HBox alignment="CENTER_RIGHT" spacing="10">
                 <padding>
-                    <Insets top="10" right="15" bottom="15" left="15"/>
+                    <Insets bottom="15" left="15" right="15" top="10" />
                 </padding>
 
-                <Label text="💡 Double-cliquez sur un membre pour voir son profil"
-                       style="-fx-font-size: 11px; -fx-text-fill: #666666;"/>
+                <Label style="-fx-font-size: 11px; -fx-text-fill: #666666;" text="💡 Double-cliquez sur un membre pour voir son profil" />
 
-                <Region HBox.hgrow="ALWAYS"/>
+                <Region HBox.hgrow="ALWAYS" />
 
-                <Button fx:id="profilBtn" text="Voir profil" onAction="#ouvrirProfilMembre"
-                        prefWidth="100" style="-fx-background-color: #9c27b0; -fx-text-fill: white;" disable="true"/>
-                <Button fx:id="supprimerBtn" text="Supprimer" onAction="#supprimerMembre"
-                        prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" disable="true"/>
-                <Button fx:id="retourBtn" text="Retour" onAction="#fermerPage"
-                        prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" disable="true"/>
+                <Button fx:id="profilBtn" disable="true" onAction="#ouvrirProfilMembre" prefWidth="100" style="-fx-background-color: #9c27b0; -fx-text-fill: white;" text="Voir profil" />
+                <Button fx:id="supprimerBtn" disable="true" onAction="#supprimerMembre" prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Supprimer" />
+                <Button fx:id="retourBtn" disable="true" onAction="#fermerPage" prefWidth="90" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Retour" />
             </HBox>
         </VBox>
     </bottom>
