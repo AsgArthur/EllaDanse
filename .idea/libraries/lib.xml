@@ -9,10 +9,10 @@
   </library>
   <library name="libAdrien">
     <CLASSES>
-      <root url="openjfx-24.0.1_windows-x64_bin-sdk/javafx-sdk-24.0.1/lib" />
+      <root url="C:\Users\gadri\Documents\cours\devApp\SAE\ellaDanse\src\openjfx-24.0.1_windows-x64_bin-sdk\javafx-sdk-24.0.1\lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
-    <jarDirectory url="openjfx-24.0.1_windows-x64_bin-sdk/javafx-sdk-24.0.1/lib" recursive="false" />
+    <jarDirectory url="C:\Users\gadri\Documents\cours\devApp\SAE\ellaDanse\src\openjfx-24.0.1_windows-x64_bin-sdk\javafx-sdk-24.0.1\lib" recursive="true" />
   </library>
 </component>
