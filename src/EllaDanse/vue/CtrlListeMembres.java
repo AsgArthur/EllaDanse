@@ -70,26 +70,25 @@ public class CtrlListeMembres {
 
             Optional<ButtonType> resultat = confirmation.showAndWait();
             if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
-                // Supprimer de la liste locale ET de la classe Donnees
-                tousLesMembres.remove(membreSelectionne);
-                boolean supprime = Donnees.supprimerMembre(membreSelectionne);
 
-                if (supprime) {
+                if (Donnees.supprimerMembre(membreSelectionne)) {
+                    // 🔁 Rafraîchir toute la vue (table, filtre, compteur, tri)
+                    rafraichirVue();
+
                     Alert info = new Alert(Alert.AlertType.INFORMATION);
                     info.setTitle("Suppression réussie");
                     info.setHeaderText(null);
                     info.setContentText("Le membre " + membreSelectionne.getPrenom() + " " +
                             membreSelectionne.getNom() + " a été supprimé avec succès.");
                     info.showAndWait();
-
-                    // Mettre à jour le compteur
-                    mettreAJourCompteur();
                 } else {
                     afficherErreur("Erreur", "Impossible de supprimer le membre de la base de données.");
                 }
             }
         }
     }
+
+
 
     @FXML
     public void toggleBureau() {

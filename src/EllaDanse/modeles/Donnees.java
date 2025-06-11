@@ -124,16 +124,6 @@ public class Donnees {
         }
     }
 
-    /**
-     * Supprime un membre
-     */
-    public static boolean supprimerMembre(int id) {
-        Membre membre = getMembreById(id);
-        if (membre != null) {
-            return lesMembres.remove(membre);
-        }
-        return false;
-    }
 
     /**
      * Supprime un membre

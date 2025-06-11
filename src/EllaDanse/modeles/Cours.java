@@ -28,6 +28,6 @@ public class Cours {
 
     @Override
     public String toString() {
-        return nom + " - " + niveau;
+        return nom + " - " + niveau + " - " + professeur + " - " + horaire + " - " + saison;
     }
 }
