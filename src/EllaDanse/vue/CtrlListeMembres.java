@@ -55,6 +55,14 @@ public class CtrlListeMembres {
     private FilteredList<Membre> membresFiltres;
     private SortedList<Membre> membresTries;
 
+    // Méthode helper pour obtenir les cours d'un membre
+    private String getCoursForMembre(Membre membre) {
+        List<Inscription> inscriptions = Donnees.getLesInscriptions().getInscriptions();
+        return inscriptions.stream()
+                .filter(i -> i.getMembre().equalsTo(membre))
+                .map(Inscription::getCours)
+                .collect(Collectors.joining(", "));
+    }
 
     @FXML
     void ouvrirProfilMembre() {
@@ -91,8 +99,6 @@ public class CtrlListeMembres {
             }
         }
     }
-
-
 
     @FXML
     public void toggleBureau() {
@@ -147,16 +153,16 @@ public class CtrlListeMembres {
 
             case "Saison, cours et ordre alphabétique":
                 comparator = Comparator.comparing(Membre::getSaison)
-                        .thenComparing(Membre::getCours)
+                        .thenComparing(m -> getCoursForMembre(m))
                         .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER);
                 break;
 
-            case "Saison, ordre alphabétique et cour":
+            case "Saison, ordre alphabétique et cours":
                 comparator = Comparator.comparing(Membre::getSaison)
                         .thenComparing(Membre::getNom, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(Membre::getPrenom, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(Membre::getCours);
+                        .thenComparing(m -> getCoursForMembre(m));
                 break;
 
             default:
@@ -168,8 +174,6 @@ public class CtrlListeMembres {
         membresTries.setComparator(comparator);
         membresTable.setItems(membresTries); // Réaffecter au cas où
     }
-
-
 
     @FXML
     public void gererDoubleClic() {
@@ -188,7 +192,13 @@ public class CtrlListeMembres {
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
         dateNaissanceCol.setCellValueFactory(new PropertyValueFactory<>("dateNaissance"));
         telephoneCol.setCellValueFactory(new PropertyValueFactory<>("telephone"));
-        coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
+
+        // Configuration spéciale pour la colonne cours
+        coursCol.setCellValueFactory(cellData -> {
+            Membre membre = cellData.getValue();
+            String cours = getCoursForMembre(membre);
+            return new javafx.beans.property.SimpleStringProperty(cours);
+        });
 
         // Style conditionnel sur les lignes
         membresTable.setRowFactory(tv -> {
@@ -217,9 +227,6 @@ public class CtrlListeMembres {
         membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
         membresTries = new SortedList<>(membresFiltres);
 
-        // Ne pas binder au comparatorProperty() du TableView ! (pour garder le tri personnalisé)
-        // membresTries.comparatorProperty().bind(membresTable.comparatorProperty());
-
         membresTable.setItems(membresTries);
 
         // Configuration des comboBox
@@ -238,14 +245,13 @@ public class CtrlListeMembres {
         changerTri(); // très important pour appliquer le tri alphabétique dès le lancement
     }
 
-
     private void configurerComboBoxes() {
         // Options de tri disponibles
         triComboBox.getItems().setAll(
                 "Ordre alphabétique et saison",
                 "Saison et ordre alphabétique",
                 "Saison, cours et ordre alphabétique",
-                "Saison, ordre alphabétique et cour"
+                "Saison, ordre alphabétique et cours"
         );
         triComboBox.setValue("Ordre alphabétique et saison");
 
@@ -256,14 +262,6 @@ public class CtrlListeMembres {
         List<String> saisons = Donnees.getLesSaisons();
         saisonComboBox.getItems().addAll(saisons);
         saisonComboBox.setValue("Toutes");
-    }
-
-
-
-    // ===== NOUVELLES MÉTHODES POUR OUVRIR LES FENÊTRES =====
-
-    private void ouvrirFenetreProfil(Membre membre) throws IOException {
-        Main.openProfil(membre);
     }
 
     private void appliquerFiltres() {
@@ -295,10 +293,12 @@ public class CtrlListeMembres {
         }
 
         String rechercheLower = recherche.toLowerCase();
+        String coursMembreLower = getCoursForMembre(membre).toLowerCase();
+
         return membre.getNom().toLowerCase().contains(rechercheLower)
                 || membre.getPrenom().toLowerCase().contains(rechercheLower)
                 || membre.getEmail().toLowerCase().contains(rechercheLower)
-                || membre.getCours().toLowerCase().contains(rechercheLower);
+                || coursMembreLower.contains(rechercheLower);
     }
 
     private void mettreAJourCompteur() {
@@ -314,8 +314,6 @@ public class CtrlListeMembres {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-    // ===== MÉTHODES PUBLIQUES POUR L'INTÉGRATION =====
 
     public void ajouterMembre(Membre nouveauMembre) {
         // Le membre est déjà ajouté dans Donnees, on refresh juste la vue
@@ -335,7 +333,6 @@ public class CtrlListeMembres {
         tousLesMembres = Donnees.getLesMembres();
         membresFiltres = new FilteredList<>(tousLesMembres, p -> true);
         membresTries = new SortedList<>(membresFiltres);
-        membresTries.comparatorProperty().bind(membresTable.comparatorProperty());
         membresTable.setItems(membresTries);
 
         // Reconfigurer les ComboBoxes au cas où de nouvelles saisons auraient été ajoutées
@@ -369,7 +366,6 @@ public class CtrlListeMembres {
     private void selectionnerMembre(Membre membre) {
     }
 
-
     public void fermerPage(ActionEvent actionEvent) {
         Main.closeListeMembre();
     }
@@ -378,5 +374,4 @@ public class CtrlListeMembres {
         Membre membreClique = tableMembres.getSelectionModel().getSelectedItem();
         return membreClique;
     }
-
 }
