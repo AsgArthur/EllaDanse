@@ -66,8 +66,28 @@ public class CtrlProfil {
     @FXML
     private Button modifierBtn;
 
+    private Button validerBtn;
+
     @FXML
     private Label nomLabel;
+
+    @FXML
+    private TextField txtAge;
+
+    @FXML
+    private TextField txtDateNaissance;
+
+    @FXML
+    private TextField txtEmail;
+
+    @FXML
+    private TextField txtNom;
+
+    @FXML
+    private TextField txtPrenom;
+
+    @FXML
+    private TextField txtTelephone;
 
     @FXML
     private Label prenomLabel;
@@ -95,7 +115,29 @@ public class CtrlProfil {
 
     @FXML
     void modifierMembre(ActionEvent event) {
+        txtNom.setEditable(true);
+        txtPrenom.setEditable(true);
+        txtAge.setEditable(true);
+        txtDateNaissance.setEditable(true);
+        txtEmail.setEditable(true);
+        txtTelephone.setEditable(true);
 
+        validerBtn.setDisable(false);
+
+        Donnees.modifierMembre();
+    }
+
+    void validerModifs(ActionEvent event) {
+        Donnees.modifierMembre(membre.getId(), txtNom.getText(), txtPrenom.getText(), Integer.parseInt(txtAge.getText()),
+                txtDateNaissance.getText(), txtEmail.getText(), txtTelephone.getText(), membre.getSaison(), membre.isMembreBureau());
+
+        validerBtn.setDisable(true);
+        txtNom.setEditable(false);
+        txtPrenom.setEditable(false);
+        txtAge.setEditable(false);
+        txtDateNaissance.setEditable(false);
+        txtEmail.setEditable(false);
+        txtTelephone.setEditable(false);
     }
 
     @FXML
@@ -139,12 +181,12 @@ public class CtrlProfil {
 
     public void afficherMembre(Membre m) {
         this.membre = m;
-        nomLabel.setText(m.getNom());
-        prenomLabel.setText(m.getPrenom());
-        ageLabel.setText(Integer.toString(m.getAge()));
-        dateNaissanceLabel.setText(m.getDateNaissance());
-        emailLabel.setText(m.getEmail());
-        telephoneLabel.setText(m.getTelephone());
+        txtNom.setText(m.getNom());
+        txtPrenom.setText(m.getPrenom());
+        txtAge.setText(Integer.toString(m.getAge()));
+        txtDateNaissance.setText(m.getDateNaissance());
+        txtEmail.setText(m.getEmail());
+        txtTelephone.setText(m.getTelephone());
     }
 
     public void afficherLesInscriptions(){
