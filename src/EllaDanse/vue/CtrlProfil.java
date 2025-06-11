@@ -18,6 +18,7 @@ import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 
@@ -96,16 +97,9 @@ public class CtrlProfil {
 
     @FXML
     void supprimerInscription(ActionEvent event) {
+        Inscription inscription = inscriptionsTable.getSelectionModel().getSelectedItem();
 
-    }
-
-    private void configurerComboBoxes() {
-        // Options de tri disponibles
-        List<String> saisons = Donnees.getLesSaisons();
-        filtreSaisonComboBox.getItems().clear();
-        filtreSaisonComboBox.getItems().add("Toutes");
-        filtreSaisonComboBox.getItems().addAll(saisons);
-        filtreSaisonComboBox.setValue("Toutes");
+        Donnees.suppInscription(inscription.getMembre(), inscription.getVraiCours());
     }
 
     public void afficherMembre(Membre m) {
@@ -140,8 +134,6 @@ public class CtrlProfil {
         coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
         horaireCol.setCellValueFactory(new PropertyValueFactory<>("horaire"));
         professeurCol.setCellValueFactory(new PropertyValueFactory<>("professeur"));
-
-        configurerComboBoxes();
     }
 }
 

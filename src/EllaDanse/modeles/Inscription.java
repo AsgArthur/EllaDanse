@@ -14,8 +14,6 @@ public class Inscription {
         this.saison = cours.getSaison();
     }
 
-
-
     public Membre getMembre() {
         return membre;
     }
@@ -26,6 +24,10 @@ public class Inscription {
 
     public String getCours() {
         return cours.getNom();
+    }
+
+    public Cours getVraiCours(){
+        return cours;
     }
 
     public String getProfesseur() {

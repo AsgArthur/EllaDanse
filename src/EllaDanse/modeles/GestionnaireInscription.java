@@ -11,6 +11,10 @@ public class GestionnaireInscription {
         inscriptions.add(new Inscription(membre, cours));
     }
 
+    public void supprimerInscription(Membre membre, Cours cours) {
+        inscriptions.removeIf(i -> i.getMembre().equalsTo(membre) && i.getVraiCours().equals(cours));
+    }
+
     public List<Inscription> getInscriptions() {
         return inscriptions;
     }

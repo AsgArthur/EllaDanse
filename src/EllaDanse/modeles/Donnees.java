@@ -36,6 +36,10 @@ public class Donnees {
 
     public static GestionnaireInscription getLesInscriptions(){return inscriptions;}
 
+    public static void suppInscription(Membre membre, Cours cours){
+        inscriptions.supprimerInscription(membre, cours);
+    }
+
     /**
      * Retourne uniquement les membres du bureau
      */
