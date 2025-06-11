@@ -57,7 +57,7 @@ public class Main extends Application{
     }
 
 
-    static public void main(String args[]) {
+    static public void main(String[] args) {
         Application.launch(args);
     }
 }
