@@ -1,3 +1,4 @@
 module EllaDanse {
-    requires javafx.
+    requires javafx.graphics;
+    requires javafx.fxml;
 }
