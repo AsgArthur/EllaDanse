@@ -71,7 +71,7 @@ public class CtrlProfil {
     @FXML
     private Label prenomLabel;
 
-
+    private int id;
 
     @FXML
     private Button supprimerInscriptionBtn;
@@ -99,11 +99,6 @@ public class CtrlProfil {
 
     }
 
-    Membre MembreClique(){
-
-        return m;
-    }
-
     public void afficherMembre(Membre m) {
         nomLabel.setText(m.getNom());
         prenomLabel.setText(m.getPrenom());
@@ -111,6 +106,24 @@ public class CtrlProfil {
         dateNaissanceLabel.setText(m.getDateNaissance());
         emailLabel.setText(m.getEmail());
         telephoneLabel.setText(m.getTelephone());
+
+        GestionnaireInscription toutesInscriptions = Donnees.getLesInscriptions();
+
+        // 2. Récupère la liste des inscriptions depuis l'objet GestionnaireInscription
+        List<Inscription> liste = toutesInscriptions.getInscriptions();           // ← extrait la liste
+        System.out.println("caca");
+        List<Inscription> listeCoursMembre = new ArrayList<>();
+        for (Inscription i : liste){
+            if (i.getMembre().equalsTo(m)){
+                listeCoursMembre.add(i);
+                System.out.println("caca");
+            }
+        }
+
+        // 3. Affiche dans la TableView
+        inscriptionsTable.setItems(FXCollections.observableArrayList(listeCoursMembre));
+
+        supprimerInscriptionBtn.disableProperty().bind(Bindings.isNull(inscriptionsTable.getSelectionModel().selectedItemProperty()));
     }
 
     public void initialize() {
@@ -119,20 +132,7 @@ public class CtrlProfil {
         horaireCol.setCellValueFactory(new PropertyValueFactory<>("horaire"));
         professeurCol.setCellValueFactory(new PropertyValueFactory<>("professeur"));
 
-        GestionnaireInscription toutesInscriptions = Donnees.getLesInscriptions();
 
-        // 2. Récupère la liste des inscriptions depuis l'objet GestionnaireInscription
-        List<Inscription> liste = toutesInscriptions.getInscriptions();           // ← extrait la liste
-
-        List<Inscription> listeCoursMembre = new ArrayList<>();
-        for (Inscription i : liste){
-            if (i.getMembre().equalsTo())
-        }
-
-        // 3. Affiche dans la TableView
-        inscriptionsTable.setItems(FXCollections.observableArrayList(liste));
-
-        supprimerInscriptionBtn.disableProperty().bind(Bindings.isNull(inscriptionsTable.getSelectionModel().selectedItemProperty()));
 
 
 

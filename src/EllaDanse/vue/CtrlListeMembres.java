@@ -357,4 +357,10 @@ public class CtrlListeMembres {
     public void fermerPage(ActionEvent actionEvent) {
         Main.closeListeMembre();
     }
+
+    public Membre membreClique(){
+        Membre membreClique = tableMembres.getSelectionModel().getSelectedItem();
+        return membreClique;
+    }
+
 }

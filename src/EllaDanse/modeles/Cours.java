@@ -13,7 +13,7 @@ public class Cours {
         this.horaire = horaire;
     }
 
-    public String getNom() { return nom; }
+    public String getNom() { return nom + " " + niveau; }
     public String getNiveau() { return niveau; }
     public String getProfesseur() { return professeur; }
     public String getHoraire() { return horaire; }
