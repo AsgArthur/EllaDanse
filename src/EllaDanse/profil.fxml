@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -45,22 +46,22 @@
                         </columnConstraints>
 
                         <Label style="-fx-font-weight: bold;" text="Nom :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <Label fx:id="nomLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                  <TextField fx:id="txtNom" disable="true" GridPane.columnIndex="1" />
 
                         <Label style="-fx-font-weight: bold;" text="Prénom :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <Label fx:id="prenomLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtPrenom" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                         <Label style="-fx-font-weight: bold;" text="Âge :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <Label fx:id="ageLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtAge" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                         <Label style="-fx-font-weight: bold;" text="Date de naissance :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <Label fx:id="dateNaissanceLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="txtDateNaissance" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
                         <Label style="-fx-font-weight: bold;" text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                        <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="txtEmail" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
                         <Label style="-fx-font-weight: bold;" text="Téléphone :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                        <Label fx:id="telephoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="txtTelephone" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <rowConstraints>
                      <RowConstraints />
                      <RowConstraints />
@@ -110,6 +111,7 @@
                 </padding>
 
                 <Button fx:id="modifierBtn" onAction="#modifierMembre" prefWidth="130" style="-fx-background-color: #2196f3; -fx-text-fill: white;" text="Modifier membre" />
+            <Button fx:id="validerBtn" disable="true" layoutX="25.0" layoutY="20.0" onAction="#validerModifs" prefWidth="130" style="-fx-background-color: #2196f3; -fx-text-fill: white;" text="Valider" />
                 <Button fx:id="ajouterInscriptionBtn" onAction="#ajouterInscription" prefWidth="140" style="-fx-background-color: #4caf50; -fx-text-fill: white;" text="Nouvelle inscription" />
                 <Button fx:id="supprimerInscriptionBtn" onAction="#supprimerInscription" prefWidth="150" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="Supprimer inscription" />
                 <Button fx:id="fermerBtn" onAction="#fermer" prefWidth="80" text="Fermer" />
