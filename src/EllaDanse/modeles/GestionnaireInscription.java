@@ -14,11 +14,4 @@ public class GestionnaireInscription {
     public List<Inscription> getInscriptions() {
         return inscriptions;
     }
-
-    public List<Cours> getCoursDuMembre(Membre membre) {
-        return inscriptions.stream()
-                .filter(i -> i.getMembre().equals(membre))
-                .map(Inscription::getCours)
-                .collect(Collectors.toList());
-    }
 }

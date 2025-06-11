@@ -14,6 +14,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,19 +45,19 @@ public class CtrlProfil {
     private ComboBox<?> filtreSaisonComboBox;
 
     @FXML
-    private TableColumn<?, ?> horaireCol;
+    private TableColumn<Inscription, String> horaireCol;
 
     @FXML
-    private TableColumn<?, ?> professeurCol;
+    private TableColumn<Inscription, String> professeurCol;
 
     @FXML
-    private TableColumn<?, ?> coursCol;
+    private TableColumn<Inscription, String> coursCol;
 
     @FXML
-    private TableColumn<?, ?> saisonCol;
+    private TableColumn<Inscription, String> saisonCol;
 
     @FXML
-    private TableView<?> inscriptionsTable;
+    private TableView<Inscription> inscriptionsTable;
 
     @FXML
     private Label membreDepuisLabel;
@@ -78,8 +79,6 @@ public class CtrlProfil {
     @FXML
     private Label telephoneLabel;
 
-    private GestionnaireInscription toutesInscriptions;
-
     @FXML
     void ajouterInscription(ActionEvent event) {
 
@@ -100,6 +99,11 @@ public class CtrlProfil {
 
     }
 
+    Membre MembreClique(){
+
+        return m;
+    }
+
     public void afficherMembre(Membre m) {
         nomLabel.setText(m.getNom());
         prenomLabel.setText(m.getPrenom());
@@ -111,14 +115,19 @@ public class CtrlProfil {
 
     public void initialize() {
         saisonCol.setCellValueFactory(new PropertyValueFactory<>("saison"));
-        coursCol.setCellValueFactory(new PropertyValueFactory<>("Nomcours"));
+        coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
         horaireCol.setCellValueFactory(new PropertyValueFactory<>("horaire"));
         professeurCol.setCellValueFactory(new PropertyValueFactory<>("professeur"));
 
-        toutesInscriptions = Donnees.getLesInscriptions();
+        GestionnaireInscription toutesInscriptions = Donnees.getLesInscriptions();
 
         // 2. Récupère la liste des inscriptions depuis l'objet GestionnaireInscription
         List<Inscription> liste = toutesInscriptions.getInscriptions();           // ← extrait la liste
+
+        List<Inscription> listeCoursMembre = new ArrayList<>();
+        for (Inscription i : liste){
+            if (i.getMembre().equalsTo())
+        }
 
         // 3. Affiche dans la TableView
         inscriptionsTable.setItems(FXCollections.observableArrayList(liste));

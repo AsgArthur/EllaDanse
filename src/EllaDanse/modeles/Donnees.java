@@ -260,11 +260,11 @@ public class Donnees {
         inscriptions.ajouterInscription(lesMembres.get(4), lesCours.get(0), "2024-2025"); // Emma Moreau → Jazz Débutant
         inscriptions.ajouterInscription(lesMembres.get(5), lesCours.get(10), "2023-2024"); // Lucas Petit → Salsa
         inscriptions.ajouterInscription(lesMembres.get(6), lesCours.get(4), "2024-2025"); // Chloé Roux → Classique Intermédiaire
-        inscriptions.ajouterInscription(lesMembres.get(6), lesCours.get(11), "2024-2025"); // Chloé Roux → Salsa
+        inscriptions.ajouterInscription(lesMembres.get(6), lesCours.get(10), "2024-2025"); // Chloé Roux → Salsa
         inscriptions.ajouterInscription(lesMembres.get(7), lesCours.get(8), "2024-2025"); // Thomas Lefevre → Hip-Hop Débutant
         inscriptions.ajouterInscription(lesMembres.get(8), lesCours.get(10), "2023-2024"); // Ana Garcia → Salsa
         inscriptions.ajouterInscription(lesMembres.get(9), lesCours.get(7), "2024-2025"); // Julie Dubois → Contemporain Intermédiaire
         inscriptions.ajouterInscription(lesMembres.get(10), lesCours.get(2), "2024-2025"); // Alexandre Fournier → Jazz Avancé
-        inscriptions.ajouterInscription(lesMembres.get(11), lesCours.get(3), "2024-2025"); // Camille Lambert → Classique Débutant
+        inscriptions.ajouterInscription(lesMembres.get(10), lesCours.get(3), "2024-2025"); // Camille Lambert → Classique Débutant
     }
 }

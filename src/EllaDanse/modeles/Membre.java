@@ -62,4 +62,8 @@ public class Membre {
     public StringProperty saisonProperty() { return saison; }
     public StringProperty coursProperty() { return cours; }
     public BooleanProperty membreBureauProperty() { return membreBureau; }
+
+    public boolean equalsTo(Membre m){
+        return this.id == m.id;
+    }
 }
