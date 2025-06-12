@@ -4,6 +4,7 @@ package EllaDanse.vue;
 import EllaDanse.controller.Main;
 import EllaDanse.modeles.Cours;
 import EllaDanse.modeles.Donnees;
+import EllaDanse.modeles.Membre;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -119,8 +120,13 @@ public class CtrlInscription {
 
         else {
             Main.closeInscription();
+            Membre m = new Membre(0,nomField.getText(), prenomField.getText(),Integer.parseInt(ageField.getText()), dateNaissancePicker.getValue().toString(), emailField.getText(), telephoneField.getText(), saisonComboBox.getValue(),mbBureau);
             Donnees.ajouterMembre(nomField.getText(), prenomField.getText(),Integer.parseInt(ageField.getText()), dateNaissancePicker.getValue().toString(), emailField.getText(), telephoneField.getText(), saisonComboBox.getValue(),mbBureau);
-
+            List<Cours> coursSelectionnes = coursListView.getSelectionModel().getSelectedItems();
+            for (Cours c : coursSelectionnes) {
+                Donnees.ajouterIns(Donnees.dernierMembre(), c);
+            }
+            Main.rafraichir();
         }
     }
 

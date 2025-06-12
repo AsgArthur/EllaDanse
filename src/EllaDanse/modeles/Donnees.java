@@ -96,6 +96,10 @@ public class Donnees {
         lesMembres.add(membre);
     }
 
+    public static void ajouterIns(Membre m, Cours c){
+        inscriptions.ajouterInscription(m, c);
+    }
+
     /**
      * Modifie un membre existant
      */
@@ -114,6 +118,9 @@ public class Donnees {
         }
     }
 
+    public static Membre dernierMembre(){
+        return lesMembres.getLast();
+    }
 
     /**
      * Supprime un membre
