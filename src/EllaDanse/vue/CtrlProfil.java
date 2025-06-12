@@ -154,7 +154,7 @@ public class CtrlProfil {
 
             modifierBtn.setDisable(false);
 
-            Main.rafraichir();
+            Main.rafraichirListeEmploye();
         }
     }
 
@@ -192,6 +192,8 @@ public class CtrlProfil {
             info.setContentText("Le membre " + inscription.getCours() + " " +
                     inscription.getHoraire() + " a été supprimé avec succès.");
             info.showAndWait();
+
+            Main.rafraichirListeEmploye();
         }
 
 

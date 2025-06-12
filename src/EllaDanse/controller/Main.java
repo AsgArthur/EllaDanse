@@ -55,7 +55,7 @@ public class Main extends Application{
         System.exit(0);
     }
 
-    static public void rafraichir(){
+    static public void rafraichirListeEmploye(){
         fListeMembres.rafraichir();
     }
 
