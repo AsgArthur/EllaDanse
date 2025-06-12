@@ -27,4 +27,8 @@ public class FenListeMembres extends Stage {
         ctrl = loader.getController();
         return racine;
     }
+
+    public void rafraichir(){
+        ctrl.rafraichirVue();
+    }
 }

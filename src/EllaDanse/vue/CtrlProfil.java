@@ -66,6 +66,7 @@ public class CtrlProfil {
     @FXML
     private Button modifierBtn;
 
+    @FXML
     private Button validerBtn;
 
     @FXML
@@ -110,7 +111,7 @@ public class CtrlProfil {
 
     @FXML
     void fermer(ActionEvent event) {
-
+        Main.closeProfil();
     }
 
     @FXML
@@ -121,20 +122,40 @@ public class CtrlProfil {
         txtDateNaissance.setDisable(false);
         txtEmail.setDisable(false);
         txtTelephone.setDisable(false);
+
+        modifierBtn.setDisable(true);
+        validerBtn.setDisable(false);
     }
 
     @FXML
     void validerModifs(ActionEvent event) {
-        Donnees.modifierMembre(membre.getId(), txtNom.getText(), txtPrenom.getText(), Integer.parseInt(txtAge.getText()),
-                txtDateNaissance.getText(), txtEmail.getText(), txtTelephone.getText(), membre.getSaison(), membre.isMembreBureau());
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmation de la modification");
+        confirmation.setHeaderText("modifier le membre ?");
+        confirmation.setContentText("Êtes-vous sûr de vouloir modifier le membre n°" + membre.getId() +
+                "?\nCette action ne peut pas être annulée.");
+        Optional<ButtonType> resultat = confirmation.showAndWait();
 
-        validerBtn.setDisable(true);
-        txtNom.setEditable(false);
-        txtPrenom.setEditable(false);
-        txtAge.setEditable(false);
-        txtDateNaissance.setEditable(false);
-        txtEmail.setEditable(false);
-        txtTelephone.setEditable(false);
+
+
+        if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
+
+            Donnees.modifierMembre(membre.getId(), txtNom.getText(), txtPrenom.getText(), Integer.parseInt(txtAge.getText()),
+                    txtDateNaissance.getText(), txtEmail.getText(), txtTelephone.getText(), membre.getSaison(), membre.isMembreBureau());
+
+            validerBtn.setDisable(true);
+
+            txtNom.setDisable(true);
+            txtPrenom.setDisable(true);
+            txtAge.setDisable(true);
+            txtDateNaissance.setDisable(true);
+            txtEmail.setDisable(true);
+            txtTelephone.setDisable(true);
+
+            modifierBtn.setDisable(false);
+
+            Main.rafraichir();
+        }
     }
 
     @FXML

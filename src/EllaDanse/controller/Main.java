@@ -43,18 +43,21 @@ public class Main extends Application{
     static public void openProfil(Membre m){
         fProfil.afficherMembre(m);
         fProfil.show();
-        fAccueil.close();
+        fListeMembres.close();
     }
 
     static public void closeProfil(){
         fProfil.close();
-        fAccueil.show();
+        fListeMembres.show();
     }
 
     static public void fermerAppli() {
         System.exit(0);
     }
 
+    static public void rafraichir(){
+        fListeMembres.rafraichir();
+    }
 
     static public void main(String[] args) {
         Application.launch(args);
