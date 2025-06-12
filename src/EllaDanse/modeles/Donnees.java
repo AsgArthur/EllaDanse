@@ -99,8 +99,8 @@ public class Donnees {
     /**
      * Modifie un membre existant
      */
-    public static void modifierMembre(int id, String nom, String prenom, int age, String dateNaissance, String email,
-                                      String telephone, String saison, String cours, boolean membreBureau) {
+    public static void modifierMembre(int id,String nom, String prenom, int age, String dateNaissance, String email,
+                                      String telephone, String saison, boolean membreBureau) {
         Membre membre = getMembreById(id);
         if (membre != null) {
             membre.setNom(nom);

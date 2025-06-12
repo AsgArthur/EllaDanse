@@ -115,18 +115,15 @@ public class CtrlProfil {
 
     @FXML
     void modifierMembre(ActionEvent event) {
-        txtNom.setEditable(true);
-        txtPrenom.setEditable(true);
-        txtAge.setEditable(true);
-        txtDateNaissance.setEditable(true);
-        txtEmail.setEditable(true);
-        txtTelephone.setEditable(true);
-
-        validerBtn.setDisable(false);
-
-        Donnees.modifierMembre();
+        txtNom.setDisable(false);
+        txtPrenom.setDisable(false);
+        txtAge.setDisable(false);
+        txtDateNaissance.setDisable(false);
+        txtEmail.setDisable(false);
+        txtTelephone.setDisable(false);
     }
 
+    @FXML
     void validerModifs(ActionEvent event) {
         Donnees.modifierMembre(membre.getId(), txtNom.getText(), txtPrenom.getText(), Integer.parseInt(txtAge.getText()),
                 txtDateNaissance.getText(), txtEmail.getText(), txtTelephone.getText(), membre.getSaison(), membre.isMembreBureau());
