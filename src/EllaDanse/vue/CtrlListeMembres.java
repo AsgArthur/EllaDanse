@@ -356,16 +356,7 @@ public class CtrlListeMembres {
     @FXML
     private TableView<Inscription> tableMembres;
 
-    @FXML
-    private void gererClicSurTable(MouseEvent event) {
-        Inscription inscription = tableMembres.getSelectionModel().getSelectedItem();
 
-        if (inscription == null) return;
-
-        if (event.getClickCount() == 2 && event.isPrimaryButtonDown()) {
-            Main.openProfil(inscription.getMembre());
-        }
-    }
 
     public void fermerPage(ActionEvent actionEvent) {
         Main.closeListeMembre();

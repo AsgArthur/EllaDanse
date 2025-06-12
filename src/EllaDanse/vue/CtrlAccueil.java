@@ -57,7 +57,7 @@ public class CtrlAccueil {
 
         Separator separator = new Separator();
 
-        Label version = new Label("Version 1.0 - 2024");
+        Label version = new Label("Version 1.0 - 2025");
         version.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
 
         Label description = new Label(
@@ -95,7 +95,7 @@ public class CtrlAccueil {
             features.add(feature, 1, i);
         }
 
-        Label copyright = new Label("© 2024 EllaDanse - Tous droits réservés");
+        Label copyright = new Label("© 2025 EllaDanse - Tous droits réservés");
         copyright.setFont(Font.font("Arial", FontWeight.NORMAL, 10));
         copyright.setTextFill(Color.GRAY);
 
