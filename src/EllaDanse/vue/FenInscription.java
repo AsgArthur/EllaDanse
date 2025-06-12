@@ -2,6 +2,8 @@ package EllaDanse.vue;
 
 import java.io.File;
 import java.io.IOException;
+
+import EllaDanse.modeles.Membre;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
@@ -24,6 +26,10 @@ public class FenInscription extends Stage{
         Pane racine = loader.load();
         ctrl = loader.getController();
         return racine;
+    }
+
+    public void nouvelleInscription(Membre membre){
+        ctrl.nouvelleInscription(membre);
     }
 }
 

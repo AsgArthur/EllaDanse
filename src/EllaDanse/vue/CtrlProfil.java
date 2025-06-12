@@ -14,6 +14,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.Array;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -106,11 +108,23 @@ public class CtrlProfil {
 
     @FXML
     void ajouterInscription(ActionEvent event) {
+        Main.openInscription();
+        Main.nouvelleInscription(membre);
 
     }
 
     @FXML
     void fermer(ActionEvent event) {
+        validerBtn.setDisable(true);
+
+        txtNom.setDisable(true);
+        txtPrenom.setDisable(true);
+        txtAge.setDisable(true);
+        txtDateNaissance.setDisable(true);
+        txtEmail.setDisable(true);
+        txtTelephone.setDisable(true);
+
+        modifierBtn.setDisable(false);
         Main.closeProfil();
     }
 
@@ -129,32 +143,74 @@ public class CtrlProfil {
 
     @FXML
     void validerModifs(ActionEvent event) {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirmation de la modification");
-        confirmation.setHeaderText("modifier le membre ?");
-        confirmation.setContentText("Êtes-vous sûr de vouloir modifier le membre n°" + membre.getId() +
-                "?\nCette action ne peut pas être annulée.");
-        Optional<ButtonType> resultat = confirmation.showAndWait();
+        String telephone = txtTelephone.getText().trim();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // Date de naissance sélectionnée par l'utilisateur
+        LocalDate dateNaissance = LocalDate.parse(txtDateNaissance.getText(), formatter);
+
+        // Âge renseigné dans le champ
+        int ageRenseigne = Integer.parseInt(txtAge.getText());
+
+        // Calcul de l'âge réel à partir de la date de naissance
+        int ageReel = Period.between(dateNaissance, LocalDate.now()).getYears();
+        if (!telephone.matches("\\d{10}")) {
+            event.consume();
+            Alert erreur = new Alert(Alert.AlertType.ERROR, "Le numéro de téléphone doit contenir exactement 10 chiffres.", ButtonType.OK);
+            erreur.setTitle("Téléphone : format invalide");
+            erreur.showAndWait();
+        }
+
+        else if (LocalDate.parse(txtDateNaissance.getText()).isAfter(LocalDate.now())) {
+            event.consume();
+            Alert erreur = new Alert(Alert.AlertType.ERROR, "La date de naissance doit être antérieure à aujourd’hui.", ButtonType.OK);
+            erreur.setTitle("Date de naissance : invalide");
+            erreur.showAndWait();
+        }
+
+        else if (!txtEmail.getText().contains("@")){
+            event.consume();
+            Alert erreur = new Alert(Alert.AlertType.ERROR, "Le mail doit avoir un format adapté.", ButtonType.OK);
+            erreur.setTitle("Email : format invalide");
+            erreur.showAndWait();
+        }
 
 
 
-        if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
+        else if (ageReel != ageRenseigne) {
+            event.consume();
+            Alert erreur = new Alert(Alert.AlertType.ERROR, "La date de naissance et l'age doivent correspondre", ButtonType.OK);
+            erreur.setTitle("DateNaissance : format invalide");
+            erreur.showAndWait();
+        }
+        else{
+            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmation.setTitle("Confirmation de la modification");
+            confirmation.setHeaderText("modifier le membre ?");
+            confirmation.setContentText("Êtes-vous sûr de vouloir modifier le membre n°" + membre.getId() +
+                    "?\nCette action ne peut pas être annulée.");
+            Optional<ButtonType> resultat = confirmation.showAndWait();
 
-            Donnees.modifierMembre(membre.getId(), txtNom.getText(), txtPrenom.getText(), Integer.parseInt(txtAge.getText()),
-                    txtDateNaissance.getText(), txtEmail.getText(), txtTelephone.getText(), membre.getSaison(), membre.isMembreBureau());
 
-            validerBtn.setDisable(true);
 
-            txtNom.setDisable(true);
-            txtPrenom.setDisable(true);
-            txtAge.setDisable(true);
-            txtDateNaissance.setDisable(true);
-            txtEmail.setDisable(true);
-            txtTelephone.setDisable(true);
+            if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
 
-            modifierBtn.setDisable(false);
+                Donnees.modifierMembre(membre.getId(), txtNom.getText(), txtPrenom.getText(), Integer.parseInt(txtAge.getText()),
+                        txtDateNaissance.getText(), txtEmail.getText(), txtTelephone.getText(), membre.getSaison(), membre.isMembreBureau());
 
-            Main.rafraichirListeEmploye();
+                validerBtn.setDisable(true);
+
+                txtNom.setDisable(true);
+                txtPrenom.setDisable(true);
+                txtAge.setDisable(true);
+                txtDateNaissance.setDisable(true);
+                txtEmail.setDisable(true);
+                txtTelephone.setDisable(true);
+
+                modifierBtn.setDisable(false);
+
+                Main.rafraichirListeEmploye();
+            }
         }
     }
 

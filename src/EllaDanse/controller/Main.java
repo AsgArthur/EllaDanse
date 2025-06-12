@@ -23,6 +23,7 @@ public class Main extends Application{
     static public void openInscription(){
         fAccueil.close();
         fInscription.show();
+        fProfil.close();
     }
 
     static public void closeInscription(){
@@ -57,6 +58,10 @@ public class Main extends Application{
 
     static public void rafraichirListeEmploye(){
         fListeMembres.rafraichir();
+    }
+
+    static public void nouvelleInscription(Membre m){
+        fInscription.nouvelleInscription(m);
     }
 
     static public void main(String[] args) {
