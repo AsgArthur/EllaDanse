@@ -46,6 +46,7 @@ public class CtrlListeMembres {
     @FXML private TextField rechercheField;
     @FXML private ComboBox<String> saisonComboBox;
     @FXML private ComboBox<String> triComboBox;
+    @FXML private ComboBox<String> coursComboBox; // Ajouter ce ComboBox pour filtrer par cours
 
     private ObservableList<Inscription> toutesLesInscriptions;
     private FilteredList<Inscription> inscriptionsFiltrees;
@@ -105,6 +106,11 @@ public class CtrlListeMembres {
     }
 
     @FXML
+    public void filtrerParCours() {
+        appliquerFiltres();
+    }
+
+    @FXML
     public void changerTri() {
         String tri = triComboBox.getValue();
         if (tri == null) return;
@@ -124,10 +130,18 @@ public class CtrlListeMembres {
                         .thenComparing(i -> i.getMembre().getPrenom(), String.CASE_INSENSITIVE_ORDER);
                 break;
 
-            case "Cours et ordre alphabétique":
-                comparator = Comparator.comparing(Inscription::getCours)
+            case "Saison, cours et ordre alphabétique":
+                comparator = Comparator.comparing(Inscription::getSaison)
+                        .thenComparing(Inscription::getCours)
                         .thenComparing((Inscription i) -> i.getMembre().getNom(), String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(i -> i.getMembre().getPrenom(), String.CASE_INSENSITIVE_ORDER);
+                break;
+
+            case "Saison, ordre alphabétique et cours":
+                comparator = Comparator.comparing(Inscription::getSaison)
+                        .thenComparing((Inscription i) -> i.getMembre().getNom(), String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(i -> i.getMembre().getPrenom(), String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(Inscription::getCours);
                 break;
 
             default:
@@ -211,6 +225,11 @@ public class CtrlListeMembres {
         // Configuration des comboBox
         configurerComboBoxes();
 
+        // Ajout des listeners pour les filtres
+        if (coursComboBox != null) {
+            coursComboBox.valueProperty().addListener((obs, oldVal, newVal) -> filtrerParCours());
+        }
+
         // Désactivation des boutons si aucune inscription sélectionnée
         profilBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
         supprimerBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
@@ -248,11 +267,12 @@ public class CtrlListeMembres {
     }
 
     private void configurerComboBoxes() {
-        // Options de tri disponibles
+        // Options de tri disponibles - exactement comme spécifié
         triComboBox.getItems().setAll(
                 "Ordre alphabétique et saison",
                 "Saison et ordre alphabétique",
-                "Cours et ordre alphabétique"
+                "Saison, cours et ordre alphabétique",
+                "Saison, ordre alphabétique et cours"
         );
         triComboBox.setValue("Ordre alphabétique et saison");
 
@@ -262,6 +282,22 @@ public class CtrlListeMembres {
         List<String> saisons = Donnees.getLesSaisons();
         saisonComboBox.getItems().addAll(saisons);
         saisonComboBox.setValue("Toutes");
+
+        // Configuration du filtre par cours (si le ComboBox existe dans le FXML)
+        if (coursComboBox != null) {
+            coursComboBox.getItems().clear();
+            coursComboBox.getItems().add("Tous");
+
+            // Récupérer tous les cours uniques des inscriptions
+            List<String> coursUniques = toutesLesInscriptions.stream()
+                    .map(Inscription::getCours)
+                    .distinct()
+                    .sorted()
+                    .collect(Collectors.toList());
+
+            coursComboBox.getItems().addAll(coursUniques);
+            coursComboBox.setValue("Tous");
+        }
     }
 
     private void appliquerFiltres() {
@@ -280,6 +316,15 @@ public class CtrlListeMembres {
             if (saisonSelectionnee != null && !saisonSelectionnee.equals("Toutes")
                     && !inscription.getSaison().equals(saisonSelectionnee)) {
                 return false;
+            }
+
+            // Filtre cours (si le ComboBox existe)
+            if (coursComboBox != null) {
+                String coursSelectionne = coursComboBox.getValue();
+                if (coursSelectionne != null && !coursSelectionne.equals("Tous")
+                        && !inscription.getCours().equals(coursSelectionne)) {
+                    return false;
+                }
             }
 
             // Filtre recherche
