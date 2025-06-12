@@ -155,13 +155,10 @@ public class CtrlInscription {
             erreur.showAndWait();
         }
 
-        // Date de naissance sélectionnée par l'utilisateur
         LocalDate dateNaissance = dateNaissancePicker.getValue();
 
-        // Âge renseigné dans le champ
         int ageRenseigne = Integer.parseInt(ageField.getText());
 
-        // Calcul de l'âge réel à partir de la date de naissance
         int ageReel = Period.between(dateNaissance, LocalDate.now()).getYears();
 
         if (ageReel != ageRenseigne) {
@@ -214,13 +211,11 @@ public class CtrlInscription {
 
         GestionnaireInscription toutesInscriptions = Donnees.getLesInscriptions();
 
-        // Récupère les cours déjà inscrits
         List<Cours> coursInscrits = toutesInscriptions.getInscriptions().stream()
                 .filter(i -> i.getMembre().equalsTo(membre))
                 .map(Inscription::getVraiCours)
                 .collect(Collectors.toList());
 
-        // Filtrer les cours disponibles pour ne pas afficher ceux déjà suivis
         List<Cours> coursDisponibles = Donnees.getLesCours().stream()
                 .filter(c -> !coursInscrits.contains(c))
                 .collect(Collectors.toList());
@@ -239,7 +234,6 @@ public class CtrlInscription {
 
         if (membre == null) return tousCours;
 
-        // Cours déjà inscrits pour le membre
         List<Inscription> inscriptionsMembre = Donnees.getLesInscriptions().getInscriptions().stream()
                 .filter(ins -> ins.getMembre().equalsTo(membre))
                 .collect(Collectors.toList());
@@ -248,7 +242,6 @@ public class CtrlInscription {
                 .map(Inscription::getVraiCours)
                 .collect(Collectors.toList());
 
-        // Filtrer les cours non déjà inscrits
         return tousCours.stream()
                 .filter(c -> !coursDejaInscrits.contains(c))
                 .collect(Collectors.toList());

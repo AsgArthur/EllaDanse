@@ -8,28 +8,20 @@ import java.util.stream.Collectors;
 
 public class Donnees {
 
-    // Liste principale des membres
     private static ObservableList<Membre> lesMembres = FXCollections.observableArrayList();
 
-    // Liste des cours disponibles
     private static ObservableList<Cours> lesCours = FXCollections.observableArrayList();
 
-    //Liste des inscriptions de membres
     private static GestionnaireInscription inscriptions = new GestionnaireInscription();
 
-    // Compteur pour les IDs
     private static int prochainIdMembre = 1;
 
-    // Initialisation statique avec des données de test
     static {
         initialiserDonneesTest();
     }
 
-    // ========== MÉTHODES POUR LES MEMBRES ==========
+    //méthodes membres
 
-    /**
-     * Retourne la liste complète des membres
-     */
     public static ObservableList<Membre> getLesMembres() {
         return lesMembres;
     }
@@ -40,36 +32,6 @@ public class Donnees {
         inscriptions.supprimerInscription(membre, cours);
     }
 
-    /**
-     * Retourne uniquement les membres du bureau
-     */
-    public static List<Membre> getLesMembresBureau() {
-        return lesMembres.stream()
-                .filter(Membre::isMembreBureau)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Retourne uniquement les membres normaux (non bureau)
-     */
-    public static List<Membre> getLesMembresNormaux() {
-        return lesMembres.stream()
-                .filter(m -> !m.isMembreBureau())
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Retourne les membres d'une saison spécifique
-     */
-    public static List<Membre> getMembresBySaison(String saison) {
-        return lesMembres.stream()
-                .filter(m -> m.getSaison().equals(saison))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Trouve un membre par son ID
-     */
     public static Membre getMembreById(int id) {
         return lesMembres.stream()
                 .filter(m -> m.getId() == id)
@@ -77,32 +39,16 @@ public class Donnees {
                 .orElse(null);
     }
 
-    /**
-     * Ajoute un nouveau membre
-     */
     public static void ajouterMembre(String nom, String prenom, int age, String dateNaissance, String email,
                                      String telephone, String saison, boolean membreBureau) {
         Membre nouveau = new Membre(prochainIdMembre++, nom, prenom, age, dateNaissance, email, telephone, saison, membreBureau);
         lesMembres.add(nouveau);
     }
 
-    /**
-     * Ajoute un membre existant
-     */
-    public static void ajouterMembre(Membre membre) {
-        if (membre.getId() == 0) {
-            membre.setId(prochainIdMembre++);
-        }
-        lesMembres.add(membre);
-    }
-
     public static void ajouterIns(Membre m, Cours c){
         inscriptions.ajouterInscription(m, c);
     }
 
-    /**
-     * Modifie un membre existant
-     */
     public static void modifierMembre(int id,String nom, String prenom, int age, String dateNaissance, String email,
                                       String telephone, String saison, boolean membreBureau) {
         Membre membre = getMembreById(id);
@@ -122,43 +68,23 @@ public class Donnees {
         return lesMembres.getLast();
     }
 
-    /**
-     * Supprime un membre
-     */
     public static boolean supprimerMembre(Membre membre) {
         return lesMembres.remove(membre);
     }
 
-    // ========== MÉTHODES POUR LES COURS ==========
 
-    /**
-     * Retourne la liste des cours
-     */
+
+    //méthodes cours
+
     public static ObservableList<Cours> getLesCours() {
         return lesCours;
     }
 
-    /**
-     * Retourne les noms des cours pour les ComboBox
-     */
-    public static List<String> getLesNomsCours() {
-        return lesCours.stream()
-                .map(c -> c.getNom() + " - " + c.getNiveau())
-                .collect(Collectors.toList());
-    }
 
-    /**
-     * Ajoute un cours
-     */
-    public static void ajouterCours(Cours cours) {
-        lesCours.add(cours);
-    }
 
-    // ========== MÉTHODES UTILITAIRES ==========
 
-    /**
-     * Retourne toutes les saisons disponibles
-     */
+    //méthodes test
+
     public static List<String> getLesSaisons() {
         return lesMembres.stream()
                 .map(Membre::getSaison)
@@ -167,50 +93,7 @@ public class Donnees {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Compte le nombre total de membres
-     */
-    public static int getNombreTotalMembres() {
-        return lesMembres.size();
-    }
-
-    /**
-     * Compte le nombre de membres du bureau
-     */
-    public static int getNombreMembresBureau() {
-        return (int) lesMembres.stream()
-                .filter(Membre::isMembreBureau)
-                .count();
-    }
-
-    /**
-     * Vérifie si un email est déjà utilisé
-     */
-    public static boolean emailExiste(String email) {
-        return lesMembres.stream()
-                .anyMatch(m -> m.getEmail().equalsIgnoreCase(email));
-    }
-
-    /**
-     * Vérifie si un email est déjà utilisé (en excluant un membre spécifique)
-     */
-    public static boolean emailExiste(String email, int idMembre) {
-        return lesMembres.stream()
-                .filter(m -> m.getId() != idMembre)
-                .anyMatch(m -> m.getEmail().equalsIgnoreCase(email));
-    }
-
-    /**
-     * Réinitialise toutes les données
-     */
-    public static void reinitialiserDonnees() {
-        lesMembres.clear();
-        lesCours.clear();
-        prochainIdMembre = 1;
-        initialiserDonneesTest();
-    }
-
-    // ========== DONNÉES DE TEST ==========
+    //tests
 
     private static void initialiserDonneesTest() {
         // Ajout des cours
@@ -244,6 +127,7 @@ public class Donnees {
         ajouterMembre("Fournier", "Alexandre", 29, "1995-09-21", "alex.fournier@email.com", "0611121314", "2024-2025", true);
         ajouterMembre("Lambert", "Camille", 23, "2001-10-02", "camille.lambert@email.com", "0612131415", "2024-2025", false);
 
+        //création inscriptions
         inscriptions.ajouterInscription(lesMembres.get(0), lesCours.get(1)); // Marie Dupont → Jazz Intermédiaire
         inscriptions.ajouterInscription(lesMembres.get(0), lesCours.get(5)); // Pierre Martin → Classique Avancé
         inscriptions.ajouterInscription(lesMembres.get(1), lesCours.get(10)); // Pierre Martin → Salsa

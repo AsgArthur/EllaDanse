@@ -11,7 +11,7 @@ public class Inscription {
     public Inscription(Membre membre, Cours cours){
         this.membre = membre;
         this.cours = cours;
-        // Gérer le cas où cours est null
+
         if (cours != null) {
             this.saison = cours.getSaison();
         } else {

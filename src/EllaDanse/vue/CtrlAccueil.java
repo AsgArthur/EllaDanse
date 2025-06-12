@@ -39,34 +39,27 @@ public class CtrlAccueil {
 
     @FXML
     void handleAPropos(ActionEvent event) {
-        // Créer un Dialog personnalisé
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("À propos");
         dialog.setHeaderText(null);
 
-        // Créer le contenu personnalisé
         VBox content = new VBox(15);
         content.setPadding(new Insets(20));
         content.setPrefWidth(450);
 
-        // Titre principal
         Label titre = new Label("EllaDanse");
         titre.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         titre.setTextFill(Color.DARKBLUE);
 
-        // Sous-titre
         Label sousTitre = new Label("Système de gestion d'école de danse");
         sousTitre.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
         sousTitre.setTextFill(Color.GRAY);
 
-        // Séparateur
         Separator separator = new Separator();
 
-        // Version
         Label version = new Label("Version 1.0 - 2024");
         version.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
 
-        // Description
         Label description = new Label(
                 "EllaDanse est une solution complète pour gérer efficacement\n" +
                         "votre école de danse. De l'inscription des élèves à la gestion\n" +
@@ -74,7 +67,6 @@ public class CtrlAccueil {
         );
         description.setWrapText(true);
 
-        // Fonctionnalités dans un GridPane
         GridPane features = new GridPane();
         features.setHgap(10);
         features.setVgap(5);
@@ -103,38 +95,32 @@ public class CtrlAccueil {
             features.add(feature, 1, i);
         }
 
-        // Copyright
         Label copyright = new Label("© 2024 EllaDanse - Tous droits réservés");
         copyright.setFont(Font.font("Arial", FontWeight.NORMAL, 10));
         copyright.setTextFill(Color.GRAY);
 
-        // Ajouter tous les éléments au contenu
         content.getChildren().addAll(
                 titre,
                 sousTitre,
                 separator,
                 version,
-                new Label(""), // Espace
+                new Label(""),
                 description,
-                new Label(""), // Espace
+                new Label(""),
                 featuresTitle,
                 features,
-                new Label(""), // Espace
+                new Label(""),
                 copyright
         );
 
-        // Définir le contenu du dialog
         dialog.getDialogPane().setContent(content);
 
-        // Ajouter le bouton OK
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
 
-        // Personnaliser le bouton OK
         Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         okButton.setText("Fermer");
         okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
 
-        // Afficher le dialog
         dialog.showAndWait();
     }
 

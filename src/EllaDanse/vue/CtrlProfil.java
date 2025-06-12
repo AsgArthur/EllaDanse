@@ -146,13 +146,10 @@ public class CtrlProfil {
         String telephone = txtTelephone.getText().trim();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        // Date de naissance sélectionnée par l'utilisateur
         LocalDate dateNaissance = LocalDate.parse(txtDateNaissance.getText(), formatter);
 
-        // Âge renseigné dans le champ
         int ageRenseigne = Integer.parseInt(txtAge.getText());
 
-        // Calcul de l'âge réel à partir de la date de naissance
         int ageReel = Period.between(dateNaissance, LocalDate.now()).getYears();
         if (!telephone.matches("\\d{10}")) {
             event.consume();
@@ -231,7 +228,6 @@ public class CtrlProfil {
 
             Donnees.suppInscription(inscription.getMembre(), inscription.getVraiCours());
 
-            // 2. Récupère la liste des inscriptions depuis l'objet GestionnaireInscription
             List<Inscription> liste = toutesInscriptions.getInscriptions();           // ← extrait la liste
             List<Inscription> listeCoursMembre = new ArrayList<>();
             for (Inscription i : liste){
@@ -269,7 +265,6 @@ public class CtrlProfil {
 
         GestionnaireInscription toutesInscriptions = Donnees.getLesInscriptions();
 
-        // 2. Récupère la liste des inscriptions depuis l'objet GestionnaireInscription
         List<Inscription> liste = toutesInscriptions.getInscriptions();           // ← extrait la liste
         List<Inscription> listeCoursMembre = new ArrayList<>();
         for (Inscription i : liste){
@@ -278,7 +273,6 @@ public class CtrlProfil {
             }
         }
 
-        // 3. Affiche dans la TableView
         inscriptionsTable.setItems(FXCollections.observableArrayList(listeCoursMembre));
 
         supprimerInscriptionBtn.disableProperty().bind(Bindings.isNull(inscriptionsTable.getSelectionModel().selectedItemProperty()));

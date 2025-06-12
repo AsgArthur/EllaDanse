@@ -47,17 +47,6 @@ public class Membre {
     public void setSaison(String saison) { this.saison.set(saison); }
     public void setMembreBureau(boolean membreBureau) { this.membreBureau.set(membreBureau); }
 
-    // Properties (pour les bindings JavaFX)
-    public IntegerProperty idProperty() { return id; }
-    public StringProperty nomProperty() { return nom; }
-    public StringProperty prenomProperty() { return prenom; }
-    public IntegerProperty ageProperty() { return age; }
-    public StringProperty dateNaissanceProperty() { return dateNaissance; }
-    public StringProperty emailProperty() { return email; }
-    public StringProperty telephoneProperty() { return telephone; }
-    public StringProperty saisonProperty() { return saison; }
-    public BooleanProperty membreBureauProperty() { return membreBureau; }
-
     public boolean equalsTo(Membre m){
         return this.id == m.id;
     }

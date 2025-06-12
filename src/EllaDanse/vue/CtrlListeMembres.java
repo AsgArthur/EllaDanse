@@ -46,7 +46,7 @@ public class CtrlListeMembres {
     @FXML private TextField rechercheField;
     @FXML private ComboBox<String> saisonComboBox;
     @FXML private ComboBox<String> triComboBox;
-    @FXML private ComboBox<String> coursComboBox; // Ajouter ce ComboBox pour filtrer par cours
+    @FXML private ComboBox<String> coursComboBox;
 
     private ObservableList<Inscription> toutesLesInscriptions;
     private FilteredList<Inscription> inscriptionsFiltrees;
@@ -79,7 +79,7 @@ public class CtrlListeMembres {
                 // Supprimer l'inscription
                 Donnees.suppInscription(membre, inscriptionSelectionnee.getVraiCours());
                 Donnees.supprimerMembre(membre);
-                // Rafraîchir la vue
+
                 rafraichirVue();
 
                 Alert info = new Alert(Alert.AlertType.INFORMATION);
@@ -163,7 +163,6 @@ public class CtrlListeMembres {
     }
 
     public void initialize() {
-        // Configuration des colonnes pour afficher les données du membre via l'inscription
         idCol.setCellValueFactory(cellData ->
                 new SimpleIntegerProperty(cellData.getValue().getMembre().getId()).asObject());
 
@@ -187,7 +186,6 @@ public class CtrlListeMembres {
         telephoneCol.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getMembre().getTelephone()));
 
-        // Configuration des colonnes spécifiques aux cours
         if (coursCol != null) {
             coursCol.setCellValueFactory(new PropertyValueFactory<>("cours"));
         }
@@ -198,7 +196,6 @@ public class CtrlListeMembres {
             professeurCol.setCellValueFactory(new PropertyValueFactory<>("professeur"));
         }
 
-        // Style conditionnel sur les lignes pour les membres du bureau
         membresTable.setRowFactory(tv -> {
             TableRow<Inscription> row = new TableRow<>();
             row.itemProperty().addListener((obs, oldVal, newVal) -> {
@@ -211,7 +208,6 @@ public class CtrlListeMembres {
             return row;
         });
 
-        // Gestion du double-clic
         membresTable.setOnMouseClicked((MouseEvent e) -> {
             if ((e.getClickCount() == 2) && (e.getButton() == MouseButton.PRIMARY) && (e.getTarget() instanceof Text)) {
                 Inscription inscription = membresTable.getSelectionModel().getSelectedItem();
@@ -221,43 +217,33 @@ public class CtrlListeMembres {
             }
         });
 
-        // Chargement des données
         chargerInscriptions();
 
-        // Configuration des comboBox
         configurerComboBoxes();
 
-        // Ajout des listeners pour les filtres
         if (coursComboBox != null) {
             coursComboBox.valueProperty().addListener((obs, oldVal, newVal) -> filtrerParCours());
         }
 
-        // Désactivation des boutons si aucune inscription sélectionnée
         profilBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
         supprimerBtn.disableProperty().bind(Bindings.isNull(membresTable.getSelectionModel().selectedItemProperty()));
 
-        // Titre de départ
         mettreAJourTitre();
 
-        // Appliquer filtres + tri par défaut
         appliquerFiltres();
         changerTri();
     }
 
     private void chargerInscriptions() {
-        // Récupérer toutes les inscriptions
         List<Inscription> inscriptions = Donnees.getLesInscriptions().getInscriptions();
 
-        // Créer aussi des "inscriptions vides" pour les membres sans cours
         List<Inscription> toutesInscriptions = new ArrayList<>(inscriptions);
 
-        // Ajouter les membres sans inscription
         for (Membre membre : Donnees.getLesMembres()) {
             boolean aDesInscriptions = inscriptions.stream()
                     .anyMatch(i -> i.getMembre().equalsTo(membre));
 
             if (!aDesInscriptions) {
-                // Créer une inscription "vide" pour ce membre
                 toutesInscriptions.add(new InscriptionVide(membre));
             }
         }
@@ -269,7 +255,6 @@ public class CtrlListeMembres {
     }
 
     private void configurerComboBoxes() {
-        // Options de tri disponibles - exactement comme spécifié
         triComboBox.getItems().setAll(
                 "Ordre alphabétique et saison",
                 "Saison et ordre alphabétique",
@@ -278,19 +263,16 @@ public class CtrlListeMembres {
         );
         triComboBox.setValue("Ordre alphabétique et saison");
 
-        // Remplissage des saisons disponibles
         saisonComboBox.getItems().clear();
         saisonComboBox.getItems().add("Toutes");
         List<String> saisons = Donnees.getLesSaisons();
         saisonComboBox.getItems().addAll(saisons);
         saisonComboBox.setValue("Toutes");
 
-        // Configuration du filtre par cours (si le ComboBox existe dans le FXML)
         if (coursComboBox != null) {
             coursComboBox.getItems().clear();
             coursComboBox.getItems().add("Tous");
 
-            // Récupérer tous les cours uniques des inscriptions
             List<String> coursUniques = toutesLesInscriptions.stream()
                     .map(Inscription::getCours)
                     .distinct()
@@ -306,21 +288,18 @@ public class CtrlListeMembres {
         inscriptionsFiltrees.setPredicate(inscription -> {
             Membre membre = inscription.getMembre();
 
-            // Filtre bureau
             if (bureauToggle.isSelected()) {
                 if (!membre.isMembreBureau()) return false;
             } else {
                 if (membre.isMembreBureau()) return false;
             }
 
-            // Filtre saison
             String saisonSelectionnee = saisonComboBox.getValue();
             if (saisonSelectionnee != null && !saisonSelectionnee.equals("Toutes")
                     && !inscription.getSaison().equals(saisonSelectionnee)) {
                 return false;
             }
 
-            // Filtre cours (si le ComboBox existe)
             if (coursComboBox != null) {
                 String coursSelectionne = coursComboBox.getValue();
                 if (coursSelectionne != null && !coursSelectionne.equals("Tous")
@@ -329,7 +308,6 @@ public class CtrlListeMembres {
                 }
             }
 
-            // Filtre recherche
             String recherche = rechercheField.getText();
             if (recherche == null || recherche.isEmpty()) {
                 return true;
@@ -393,7 +371,6 @@ public class CtrlListeMembres {
         Main.closeListeMembre();
     }
 
-    // Classe interne pour représenter un membre sans inscription
     private static class InscriptionVide extends Inscription {
         public InscriptionVide(Membre membre) {
             super(membre, null);
