@@ -62,7 +62,7 @@
                 <TableColumn fx:id="emailCol" prefWidth="150.00006103515625" text="Email" />
             <TableColumn fx:id="telephoneCol" minWidth="4.0" prefWidth="114.0" text="Téléphone" />
                 <TableColumn fx:id="saisonCol" minWidth="0.0" prefWidth="85.333251953125" text="Saison" />
-            <TableColumn fx:id="coursCol" minWidth="0.0" prefWidth="140.666748046875" text="Cours" />
+            <TableColumn fx:id="coursCol" minWidth="0.0" prefWidth="280.666748046875" text="Cours" />
             </columns>
             <placeholder>
                 <VBox alignment="CENTER" spacing="10">
