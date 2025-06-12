@@ -62,6 +62,7 @@ public class CtrlListeMembres {
 
     @FXML
     public void supprimerMembre() {
+        Membre membreSelectionne = membresTable.getSelectionModel().getSelectedItem().getMembre();
         Inscription inscriptionSelectionnee = membresTable.getSelectionModel().getSelectedItem();
         if (inscriptionSelectionnee != null) {
             Membre membre = inscriptionSelectionnee.getMembre();
@@ -77,6 +78,7 @@ public class CtrlListeMembres {
             if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
                 // Supprimer l'inscription
                 Donnees.suppInscription(membre, inscriptionSelectionnee.getVraiCours());
+                Donnees.supprimerMembre(membre);
                 // Rafraîchir la vue
                 rafraichirVue();
 

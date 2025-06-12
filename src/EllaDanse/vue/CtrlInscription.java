@@ -202,18 +202,18 @@ public class CtrlInscription {
         GestionnaireInscription toutesInscriptions = Donnees.getLesInscriptions();
 
         // 2. Récupère la liste des inscriptions depuis l'objet GestionnaireInscription
-        List<Inscription> liste = toutesInscriptions.getInscriptions();           // ← extrait la liste
-        List<Inscription> listeCoursMembre = new ArrayList<>();
+        List<Inscription> listeToutesInscriptions = toutesInscriptions.getInscriptions();           // ← extrait la liste
+        List<Inscription> listeCoursDuMembre = new ArrayList<>();
         List<Cours> listeFinale = new ArrayList<>();
-        for (Inscription i : liste){
+        for (Inscription i : listeToutesInscriptions){
             if (i.getMembre().equalsTo(membre)){
-                listeCoursMembre.add(i);
+                listeCoursDuMembre.add(i);
             }
         }
-        for (Inscription i : listeCoursMembre){
-            liste.remove(i);
+        for (Inscription i : listeCoursDuMembre){
+            listeToutesInscriptions.remove(i);
         }
-        for (Inscription i : liste){
+        for (Inscription i : listeToutesInscriptions){
             listeFinale.add(i.getVraiCours());
         }
         coursListView.setItems(FXCollections.observableArrayList(listeFinale));
