@@ -57,7 +57,7 @@ public class CtrlInscription {
     private TextField ageField;
 
     private boolean mbBureau;
-    private Membre membre;
+    private Membre membre = null;
 
     public void initialize(){
         validerBtn.disableProperty().bind(
@@ -85,13 +85,24 @@ public class CtrlInscription {
         coursListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         saisonComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null || newVal.equals("Choisir")) {
-                coursListView.setItems(Donnees.getLesCours()); // affiche tous les cours
-            } else {
-                List<Cours> coursFiltres = Donnees.getLesCours().stream()
-                        .filter(c -> c.getSaison().equals(newVal))
-                        .collect(Collectors.toList());
+                List<Cours> coursDisponibles = Donnees.getLesCours();
+                if (membre != null) {
+                    List<Inscription> inscriptionsMembre = Donnees.getLesInscriptions().getInscriptions().stream()
+                            .filter(ins -> ins.getMembre().equalsTo(membre))
+                            .collect(Collectors.toList());
 
-                coursListView.setItems(FXCollections.observableArrayList(coursFiltres));
+                    List<Cours> coursDejaInscrits = inscriptionsMembre.stream()
+                            .map(Inscription::getVraiCours)
+                            .collect(Collectors.toList());
+
+                    coursDisponibles = coursDisponibles.stream()
+                            .filter(c -> !coursDejaInscrits.contains(c))
+                            .collect(Collectors.toList());
+                }
+
+                coursListView.setItems(FXCollections.observableArrayList(coursDisponibles));
+            } else {
+                coursListView.setItems(FXCollections.observableArrayList(getCoursDisponiblesPourSaison(newVal)));
             }
         });
     }
@@ -112,7 +123,6 @@ public class CtrlInscription {
         saisonComboBox.setValue("Choisir"); // ou null si tu préfères
         cbOui.setSelected(false);
         cbNon.setSelected(false);
-        coursListView.getSelectionModel().clearSelection();
         messageLabel.setText(""); // si tu veux aussi vider le message
     }
 
@@ -169,6 +179,7 @@ public class CtrlInscription {
                     Donnees.ajouterIns(membre, c);
                 }
                 Main.rafraichirListeEmploye();
+                reinitialiserChamps();
             }else{
                 Main.closeInscription();
                 Membre m = new Membre(0,nomField.getText(), prenomField.getText(),Integer.parseInt(ageField.getText()), dateNaissancePicker.getValue().toString(), emailField.getText(), telephoneField.getText(), saisonComboBox.getValue(),mbBureau);
@@ -178,9 +189,11 @@ public class CtrlInscription {
                     Donnees.ajouterIns(Donnees.dernierMembre(), c);
                 }
                 Main.rafraichirListeEmploye();
+                reinitialiserChamps();
             }
 
         }
+
     }
 
     public void nouvelleInscription(Membre m){
@@ -194,33 +207,51 @@ public class CtrlInscription {
 
         if (membre.isMembreBureau()){
             cbOui.setSelected(true);
-        }else if (!membre.isMembreBureau()){
+        } else {
             cbNon.setSelected(true);
             cbOui.setSelected(false);
         }
 
         GestionnaireInscription toutesInscriptions = Donnees.getLesInscriptions();
 
-        // 2. Récupère la liste des inscriptions depuis l'objet GestionnaireInscription
-        List<Inscription> listeToutesInscriptions = toutesInscriptions.getInscriptions();           // ← extrait la liste
-        List<Inscription> listeCoursDuMembre = new ArrayList<>();
-        List<Cours> listeFinale = new ArrayList<>();
-        for (Inscription i : listeToutesInscriptions){
-            if (i.getMembre().equalsTo(membre)){
-                listeCoursDuMembre.add(i);
-            }
-        }
-        for (Inscription i : listeCoursDuMembre){
-            listeToutesInscriptions.remove(i);
-        }
-        for (Inscription i : listeToutesInscriptions){
-            listeFinale.add(i.getVraiCours());
-        }
-        coursListView.setItems(FXCollections.observableArrayList(listeFinale));
+        // Récupère les cours déjà inscrits
+        List<Cours> coursInscrits = toutesInscriptions.getInscriptions().stream()
+                .filter(i -> i.getMembre().equalsTo(membre))
+                .map(Inscription::getVraiCours)
+                .collect(Collectors.toList());
+
+        // Filtrer les cours disponibles pour ne pas afficher ceux déjà suivis
+        List<Cours> coursDisponibles = Donnees.getLesCours().stream()
+                .filter(c -> !coursInscrits.contains(c))
+                .collect(Collectors.toList());
+
+        coursListView.setItems(FXCollections.observableArrayList(coursDisponibles));
     }
 
     public void cbOuiValider(ActionEvent event) {
         mbBureau = true;
+    }
+
+    private List<Cours> getCoursDisponiblesPourSaison(String saison) {
+        List<Cours> tousCours = Donnees.getLesCours().stream()
+                .filter(c -> c.getSaison().equals(saison))
+                .collect(Collectors.toList());
+
+        if (membre == null) return tousCours;
+
+        // Cours déjà inscrits pour le membre
+        List<Inscription> inscriptionsMembre = Donnees.getLesInscriptions().getInscriptions().stream()
+                .filter(ins -> ins.getMembre().equalsTo(membre))
+                .collect(Collectors.toList());
+
+        List<Cours> coursDejaInscrits = inscriptionsMembre.stream()
+                .map(Inscription::getVraiCours)
+                .collect(Collectors.toList());
+
+        // Filtrer les cours non déjà inscrits
+        return tousCours.stream()
+                .filter(c -> !coursDejaInscrits.contains(c))
+                .collect(Collectors.toList());
     }
 
     public void cbNonValider(ActionEvent event) {

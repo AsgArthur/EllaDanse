@@ -222,9 +222,9 @@ public class CtrlProfil {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Confirmation de suppression");
         confirmation.setHeaderText("Supprimer l'inscription'");
-        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer ?" +
+        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer ?\n" +
                 inscription.getCours() + " " + inscription.getHoraire() + " ?\n\n" +
-                "Cette action ne peut pas être annulée.");
+                "Cette action ne peut pas être annulée ni remboursée.");
         Optional<ButtonType> resultat = confirmation.showAndWait();
 
         if (resultat.isPresent() && resultat.get() == ButtonType.OK) {
