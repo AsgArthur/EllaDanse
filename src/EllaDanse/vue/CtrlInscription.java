@@ -126,7 +126,7 @@ public class CtrlInscription {
             for (Cours c : coursSelectionnes) {
                 Donnees.ajouterIns(Donnees.dernierMembre(), c);
             }
-            Main.rafraichir();
+            Main.rafraichirListeEmploye();
         }
     }
 
