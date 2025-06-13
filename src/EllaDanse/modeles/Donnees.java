@@ -142,4 +142,5 @@ public class Donnees {
         inscriptions.ajouterInscription(lesMembres.get(10), lesCours.get(2)); // Alexandre Fournier → Jazz Avancé
         inscriptions.ajouterInscription(lesMembres.get(11), lesCours.get(3)); // Camille Lambert → Classique Débutant
     }
+
 }

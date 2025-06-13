@@ -47,6 +47,7 @@ public class Membre {
     public void setSaison(String saison) { this.saison.set(saison); }
     public void setMembreBureau(boolean membreBureau) { this.membreBureau.set(membreBureau); }
 
+
     public boolean equalsTo(Membre m){
         return this.id == m.id;
     }

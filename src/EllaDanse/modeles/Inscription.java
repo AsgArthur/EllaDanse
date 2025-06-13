@@ -19,6 +19,7 @@ public class Inscription {
         }
     }
 
+
     public Membre getMembre() {
         return membre;
     }

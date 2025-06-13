@@ -31,6 +31,7 @@ public class FenInscription extends Stage{
     public void nouvelleInscription(Membre membre){
         ctrl.nouvelleInscription(membre);
     }
+
 }
 
 

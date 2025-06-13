@@ -193,6 +193,7 @@ public class CtrlInscription {
 
     }
 
+
     public void nouvelleInscription(Membre m){
         membre = m;
         nomField.setText(membre.getNom());

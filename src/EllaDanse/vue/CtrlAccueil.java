@@ -99,6 +99,7 @@ public class CtrlAccueil {
         copyright.setFont(Font.font("Arial", FontWeight.NORMAL, 10));
         copyright.setTextFill(Color.GRAY);
 
+
         content.getChildren().addAll(
                 titre,
                 sousTitre,

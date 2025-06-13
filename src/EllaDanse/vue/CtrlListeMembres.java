@@ -357,7 +357,6 @@ public class CtrlListeMembres {
     private TableView<Inscription> tableMembres;
 
 
-
     public void fermerPage(ActionEvent actionEvent) {
         Main.closeListeMembre();
     }

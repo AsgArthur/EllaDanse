@@ -20,6 +20,7 @@ public class FenAccueil extends Stage {
         this.setScene(laScene);
     }
 
+
     private Pane creerSceneGraph() throws IOException {
         File f = new File("src/EllaDanse/accueil.fxml");
         FXMLLoader loader;

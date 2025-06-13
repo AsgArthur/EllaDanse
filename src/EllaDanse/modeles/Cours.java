@@ -26,6 +26,7 @@ public class Cours {
     public void setProfesseur(String professeur) { this.professeur = professeur; }
     public void setHoraire(String horaire) { this.horaire = horaire; }
 
+
     public String toString() {
         return nom + " - " + niveau + " - " + professeur + " - " + horaire + " - " + saison;
     }

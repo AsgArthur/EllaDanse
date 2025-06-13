@@ -59,7 +59,6 @@ public class Main extends Application{
     static public void rafraichirListeEmploye(){
         fListeMembres.rafraichir();
     }
-
     static public void nouvelleInscription(Membre m){
         fInscription.nouvelleInscription(m);
     }

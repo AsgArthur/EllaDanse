@@ -173,7 +173,6 @@ public class CtrlProfil {
         }
 
 
-
         else if (ageReel != ageRenseigne) {
             event.consume();
             Alert erreur = new Alert(Alert.AlertType.ERROR, "La date de naissance et l'age doivent correspondre", ButtonType.OK);

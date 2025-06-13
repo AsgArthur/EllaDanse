@@ -28,6 +28,7 @@ public class FenListeMembres extends Stage {
         return racine;
     }
 
+
     public void rafraichir(){
         ctrl.rafraichirVue();
     }
